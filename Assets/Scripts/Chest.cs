@@ -55,6 +55,7 @@ public class Chest : MonoBehaviour
     {
         OpenAnim();
         containsText.gameObject.SetActive(true);
+        BillboardSetContainingKeys();
     }
 
     #endregion
