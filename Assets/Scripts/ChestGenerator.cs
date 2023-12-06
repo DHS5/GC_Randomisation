@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ChestGenerator : MonoBehaviour
@@ -216,23 +217,18 @@ public class ChestGenerator : MonoBehaviour
         }
     }
 
-    private void CleanFillChest(List<Key> keys)
+    private void CleanFillChest(IReadOnlyList<Key> keys)
     {
-        foreach (var chest in Chests)
+        foreach (var chest in Chests.Where(chest => chest.HasCondition && !chest.IsFinalChest).Where(chest => chest.ContainedKey == chest.Key))
         {
-            if (chest.HasCondition && !chest.IsFinalChest)
+            Key newKey;
+            do
             {
-                if (chest.ContainedKey == chest.Key)
-                {
-                    Key newKey;
-                    do
-                    {
-                        newKey = keys[Random.Range(0, keys.Count)];
-                    } while (newKey == chest.Key || newKey == Key.NO_CONDITION);
-                    chest.SetContainingKey(newKey);
-                }
-            }
+                newKey = keys[Random.Range(0, keys.Count)];
+            } while (newKey == chest.Key || newKey == Key.NO_CONDITION);
+            chest.SetContainingKey(newKey);
         }
+
         ConstructChestGraph();
     }
     
@@ -240,12 +236,9 @@ public class ChestGenerator : MonoBehaviour
     {
         foreach (var chest in Chests)
         {
-            foreach (var chest1 in Chests)
+            foreach (var chest1 in Chests.Where(chest1 => chest.ContainedKey == chest1.Key))
             {
-                if (chest.ContainedKey == chest1.Key)
-                {
-                    chest.Childs.Add(chest1);
-                }
+                chest.Childs.Add(chest1);
             }
         }
     }
@@ -255,12 +248,9 @@ public class ChestGenerator : MonoBehaviour
     {
         if (Chests == null || Chests.Count == 0) return;
 
-        foreach (var chest in Chests)
+        foreach (var chest in Chests.Where(chest => chest != null))
         {
-            if (chest != null)
-            {
-                Destroy(chest.gameObject);
-            }
+            Destroy(chest.gameObject);
         }
     }
 }
