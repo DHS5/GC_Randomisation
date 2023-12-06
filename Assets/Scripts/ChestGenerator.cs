@@ -99,6 +99,8 @@ public class ChestGenerator : MonoBehaviour
         }
 
         FillChests();
+
+        CleanFillChest(keys);
     }
     private void SetSeed(int seed)
     {
@@ -215,6 +217,25 @@ public class ChestGenerator : MonoBehaviour
 
             chests.Remove(nextChest);
             FillChest(nextChest, chest.Key, chests);
+        }
+    }
+
+    private void CleanFillChest(List<Key> keys)
+    {
+        foreach (var chest in Chests)
+        {
+            if (chest.HasCondition && !chest.IsFinalChest)
+            {
+                if (chest.ContainedKeys.Contains(chest.Key))
+                {
+                    Key newKey;
+                    do
+                    {
+                        newKey = keys[Random.Range(0, keys.Count)];
+                    } while (newKey == chest.Key || newKey == Key.NO_CONDITION);
+                    chest.SetContainingKeyList(new() { newKey });
+                }
+            }
         }
     }
 

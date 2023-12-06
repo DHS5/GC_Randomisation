@@ -19,6 +19,7 @@ public class Chest : MonoBehaviour
     public ChestGenerator.Key Key { get; private set; }
 
     public bool HasCondition => Key != ChestGenerator.Key.NO_CONDITION;
+    public bool IsFinalChest => ContainedKeys == null || ContainedKeys.Count == 0;
 
     public List<ChestGenerator.Key> ContainedKeys { get; private set; }
 
@@ -43,7 +44,7 @@ public class Chest : MonoBehaviour
     }
     private void BillboardSetContainingKeys()
     {
-        containsText.text = ContainedKeys.Count == 0 ? "Final chest" : "Contains Key " + ContainedKeys[0];
+        containsText.text = IsFinalChest ? "Final chest" : "Contains Key " + ContainedKeys[0];
     }
 
     #endregion
