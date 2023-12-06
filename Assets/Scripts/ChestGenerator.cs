@@ -278,11 +278,11 @@ public class ChestGenerator : MonoBehaviour
         Chest start = Chests[^1];
         Chest end = Chests[0];
         bool[] visited = new bool[Chests.Count];
-        DFS(start, end, ref visited, path, paths);
+        DFS(start, end, visited, path, paths);
         return paths;
     }
     
-    private void DFS(Chest current, Chest end, ref bool[] visited, List<Chest> path, List<List<Chest>> paths)
+    private void DFS(Chest current, Chest end, bool[] visited, List<Chest> path, List<List<Chest>> paths)
     {
         visited[(int)current.ChestID] = true;
         path.Add(current);
@@ -293,17 +293,13 @@ public class ChestGenerator : MonoBehaviour
         }
         else
         {
-            foreach (var chest in current.Parent)
+            foreach (var chest in current.Parent.Where(chest => !visited[(int)chest.ChestID]))
             {
-                if (!visited[(int)chest.ChestID])
-                {
-                    DFS(chest, end, ref visited, path, paths);
-                }
+                DFS(chest, end, visited, path, paths);
             }
         }
 
         path.Remove(current);
-        // path.RemoveAt(path.Count - 1); // Use RemoveAt to remove the last element
         visited[(int)current.ChestID] = false;
     }
 
