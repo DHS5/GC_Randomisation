@@ -239,6 +239,7 @@ public class ChestGenerator : MonoBehaviour
             foreach (var chest1 in Chests.Where(chest1 => chest.ContainedKey == chest1.Key))
             {
                 chest.Childs.Add(chest1);
+                chest.CreateArrows();
             }
         }
     }

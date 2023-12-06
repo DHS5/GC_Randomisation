@@ -15,6 +15,9 @@ public class Chest : MonoBehaviour
     [SerializeField] private TextMeshProUGUI containsText;
     private static readonly int Open = Animator.StringToHash("Open");
 
+    [Header("Prefabs")]
+    [SerializeField] private GameObject _arrowPrefab;
+
     public ChestGenerator.ChestID ChestID { get; private set; }
     public ChestGenerator.Key Key { get; private set; }
     public List<Chest> Childs { get; private set; } = new();
@@ -74,4 +77,25 @@ public class Chest : MonoBehaviour
         ContainedKey = key;
         BillboardSetContainingKeys();
     }
+
+    #region Arrow
+
+    public void CreateArrows()
+    {
+        foreach (var child in Childs)
+        {
+            if (child != null)
+            {
+                CreateArrow(child);
+            }
+        }
+    }
+    private void CreateArrow(Chest chest)
+    {
+        Arrow arrow = Instantiate(_arrowPrefab).GetComponent<Arrow>();
+
+        arrow.Init(transform, chest.transform);
+    }
+
+    #endregion
 }

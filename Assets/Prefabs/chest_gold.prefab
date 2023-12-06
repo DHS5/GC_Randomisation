@@ -139,6 +139,8 @@ MonoBehaviour:
   titleText: {fileID: 8077358199654120534}
   conditionText: {fileID: 7786391680539189823}
   containsText: {fileID: 430446475315458285}
+  _arrowPrefab: {fileID: 6844062291489874283, guid: 841163f271a4be943a2eec15ff5ca65d,
+    type: 3}
 --- !u!95 &8168647041203985697
 Animator:
   serializedVersion: 5
