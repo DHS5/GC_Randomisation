@@ -186,7 +186,9 @@ public class ChestGenerator : MonoBehaviour
         //} while (finalChest.HasCondition);
         chests.Remove(finalChest);
 
-        FillChest(chests[Random.Range(0, chests.Count)], finalChest.Key, chests);
+        Chest chest = chests[Random.Range(0, chests.Count)];
+        chests.Remove(chest);
+        FillChest(chest, finalChest.Key, chests);
     }
     private void FillChest(Chest chest, Key key, List<Chest> chests)
     {
