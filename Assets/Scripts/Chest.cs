@@ -40,6 +40,15 @@ public class Chest : MonoBehaviour
 
     #endregion
 
+    #region Open
+
+    private void OnMouseDown()
+    {
+        OpenAnim();
+    }
+
+    #endregion
+
     public void SetTitleAndKey(ChestGenerator.ChestID chestID, ChestGenerator.Key key)
     {
         ChestID = chestID;
