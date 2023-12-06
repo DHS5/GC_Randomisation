@@ -258,8 +258,10 @@ public class ChestGenerator : MonoBehaviour
     
     private void ConstructChestGraph2Worker(Chest chest, int rank)
     {
-        if (chest.ContainedKey == Key.NO_CONDITION) return;
+        if (chest.HasChilds || chest.ContainedKey == Key.NO_CONDITION) return;
         
+        chest.HasChilds = true;
+
         var childList = new List<Chest>();
         
         foreach (var chest1 in Chests.Where(chest1 => chest1 != chest && chest.ContainedKey == chest1.Key))

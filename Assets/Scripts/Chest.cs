@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.XR;
 using UnityEngine;
 
 public class Chest : MonoBehaviour
@@ -22,6 +23,7 @@ public class Chest : MonoBehaviour
     public ChestGenerator.ChestID ChestID { get; private set; }
     public ChestGenerator.Key Key { get; private set; }
     public List<Chest> Childs { get; private set; } = new();
+    public bool HasChilds { get; set; }
     
     public Dictionary<int, List<Chest>> ChildsDict { get; private set; } = new();
 
@@ -84,13 +86,9 @@ public class Chest : MonoBehaviour
 
     #region Arrow
 
-    private bool hasArrows;
-
     public void CreateArrows(int rank)
     {
-        if (hasArrows || Childs.Count == 0) return;
-
-        hasArrows = true;
+        if (Childs.Count == 0) return;
 
         foreach (var child in Childs)
         {
