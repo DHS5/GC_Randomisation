@@ -9,13 +9,25 @@ public class Arrow : MonoBehaviour
     [Space(5f)]
     [SerializeField] private Gradient _colorGradient;
 
-    public void Init(Transform origin, Transform destination, int rank)
+    private int rank;
+    public void Init(Transform origin, Transform destination, int _rank)
     {
+        rank = _rank;
+
         Vector3 originPos = origin.position;
         Vector3 destinationPos = destination.position;
 
-        _lineRenderer.SetPosition(0, new Vector3(originPos.x, 0.1f, originPos.z));
-        _lineRenderer.SetPosition(1, new Vector3(destinationPos.x, 0.1f, destinationPos.z));
+        Vector3 dir = destinationPos - originPos;
+        float offset = 0.6f;
+        float dist = dir.magnitude - 2 * offset;
+        dir = dir.normalized;
+
+        originPos.y = 0.35f;
+
+        _lineRenderer.SetPosition(0, originPos + (offset * dir));
+        _lineRenderer.SetPosition(1, originPos + ((offset + dist * 0.89f) * dir));
+        _lineRenderer.SetPosition(2, originPos + ((offset + dist * 0.9f) * dir));
+        _lineRenderer.SetPosition(3, originPos + ((offset + dist) * dir));
         _lineRenderer.startColor = _colorGradient.Evaluate((float)rank / 9);
         _lineRenderer.endColor = _colorGradient.Evaluate((float)rank / 9);
 
