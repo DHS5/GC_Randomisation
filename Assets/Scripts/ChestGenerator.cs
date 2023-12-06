@@ -97,6 +97,8 @@ public class ChestGenerator : MonoBehaviour
         {
             Chests.Add(GenerateChest((ChestID)i, keys[i]));
         }
+
+        FillChests();
     }
     private void SetSeed(int seed)
     {
