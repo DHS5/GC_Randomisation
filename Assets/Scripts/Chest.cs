@@ -12,6 +12,7 @@ public class Chest : MonoBehaviour
     [Space(10f)]
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI conditionText;
+    [SerializeField] private TextMeshProUGUI containsText;
     private static readonly int Open = Animator.StringToHash("Open");
 
     public ChestGenerator.ChestID ChestID { get; private set; }
@@ -40,6 +41,10 @@ public class Chest : MonoBehaviour
             "No condition"
             : "Open with key " + key;
     }
+    private void BillboardSetContainingKeys()
+    {
+        containsText.text = "Contains Key " + ContainedKeys[0];
+    }
 
     #endregion
 
@@ -48,6 +53,7 @@ public class Chest : MonoBehaviour
     private void OnMouseDown()
     {
         OpenAnim();
+        containsText.gameObject.SetActive(true);
     }
 
     #endregion
@@ -63,5 +69,6 @@ public class Chest : MonoBehaviour
     public void SetContainingKeyList(List<ChestGenerator.Key> keys)
     {
         ContainedKeys = keys;
+        BillboardSetContainingKeys();
     }
 }
