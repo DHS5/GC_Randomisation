@@ -207,7 +207,11 @@ public class ChestGenerator : MonoBehaviour
         // Get random chest
         else
         {
-            Chest nextChest = chests[Random.Range(0, chests.Count)];
+            Chest nextChest;
+            do
+            {
+                nextChest = chests[Random.Range(0, chests.Count)];
+            } while (nextChest.Key == chest.Key);
             chests.Remove(nextChest);
             FillChest(nextChest, chest.Key, chests);
         }
