@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using static ChestGenerator;
 using Random = UnityEngine.Random;
 
 public class ChestGenerator : MonoBehaviour
@@ -257,12 +258,15 @@ public class ChestGenerator : MonoBehaviour
         StringBuilder sb = new();
         foreach (var path in PossiblePaths())
         {
+            Debug.Log("path");
             foreach (var chest in path)
             {
+                Debug.Log(chest.ChestID.ToString());
                 sb.Append(chest.ChestID.ToString());
                 sb.Append(" ");
             }
-            sb.AppendLine();
+            Debug.Log("line");
+            sb.Append("\n");
         }
         Debug.Log(sb.ToString());
     }
@@ -274,11 +278,11 @@ public class ChestGenerator : MonoBehaviour
         Chest start = Chests[^1];
         Chest end = Chests[0];
         bool[] visited = new bool[Chests.Count];
-        DFS(start, end, visited, path, paths);
+        DFS(start, end, ref visited, path, paths);
         return paths;
     }
     
-    private void DFS(Chest current, Chest end, bool[] visited, List<Chest> path, List<List<Chest>> paths)
+    private void DFS(Chest current, Chest end, ref bool[] visited, List<Chest> path, List<List<Chest>> paths)
     {
         visited[(int)current.ChestID] = true;
         path.Add(current);
@@ -289,9 +293,12 @@ public class ChestGenerator : MonoBehaviour
         }
         else
         {
-            foreach (var chest in current.Childs.Where(chest => !visited[(int)chest.ChestID]))
+            foreach (var chest in current.Childs)
             {
-                DFS(chest, end, visited, path, paths);
+                if (!visited[(int)chest.ChestID])
+                {
+                    DFS(chest, end, ref visited, path, paths);
+                }
             }
         }
 
