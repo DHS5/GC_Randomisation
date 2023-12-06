@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TMPro;
 using UnityEngine;
-using static ChestGenerator;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class ChestGenerator : MonoBehaviour
@@ -30,12 +31,16 @@ public class ChestGenerator : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private List<Transform> _chestAnchors;
+    [SerializeField] private TextMeshProUGUI _pathsText;
+    [SerializeField] private RectTransform _pathsLayout;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject _chestPrefab;
 
 
     public List<Chest> Chests { get; private set; }
+
+    public bool IsBinActive { get; set; }
 
     #endregion
 
@@ -263,19 +268,24 @@ public class ChestGenerator : MonoBehaviour
     public void DisplayPaths()
     {
         StringBuilder sb = new();
-        foreach (var path in PossiblePaths())
+
+        List<List<Chest>> paths = PossiblePaths();
+        List<Chest> path;
+        for (int i = 0; i < paths.Count; i++)
         {
-            Debug.Log("path");
+            path = paths[i];
+            path.Reverse();
             foreach (var chest in path)
             {
-                Debug.Log(chest.ChestID.ToString());
                 sb.Append(chest.ChestID.ToString());
                 sb.Append(" ");
             }
-            Debug.Log("line");
             sb.Append("\n");
         }
         Debug.Log(sb.ToString());
+        _pathsText.text = sb.ToString();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_pathsLayout);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_pathsLayout);
     }
 
     private List<List<Chest>> PossiblePaths()
