@@ -43,7 +43,7 @@ public class Chest : MonoBehaviour
     }
     private void BillboardSetContainingKeys()
     {
-        containsText.text = "Contains Key " + ContainedKeys[0];
+        containsText.text = ContainedKeys.Count == 0 ? "Final chest" : "Contains Key " + ContainedKeys[0];
     }
 
     #endregion
