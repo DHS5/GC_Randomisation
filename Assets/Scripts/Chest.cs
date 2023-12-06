@@ -11,6 +11,7 @@ public class Chest : MonoBehaviour
     [SerializeField] private Animator animator;
     [Space(10f)]
     [SerializeField] private TextMeshProUGUI titleText;
+    [SerializeField] private TextMeshPro letterText;
     [SerializeField] private TextMeshProUGUI conditionText;
     [SerializeField] private TextMeshProUGUI containsText;
     private static readonly int Open = Animator.StringToHash("Open");
@@ -43,6 +44,7 @@ public class Chest : MonoBehaviour
     private void BillboardSetTitleAndKey(ChestGenerator.ChestID chestID, ChestGenerator.Key key)
     {
         titleText.text = "Chest " + chestID;
+        letterText.text = chestID.ToString();
         conditionText.text =
             key == ChestGenerator.Key.NO_CONDITION ?
             "No condition"
