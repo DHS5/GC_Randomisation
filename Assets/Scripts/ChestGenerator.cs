@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -248,6 +249,21 @@ public class ChestGenerator : MonoBehaviour
         }
 
         //Chests[0].CreateArrows();
+    }
+
+    public void DisplayPaths()
+    {
+        StringBuilder sb = new();
+        foreach (var path in PossiblePaths())
+        {
+            foreach (var chest in path)
+            {
+                sb.Append(chest.ChestID.ToString());
+                sb.Append(" ");
+            }
+            sb.AppendLine();
+        }
+        Debug.Log(sb.ToString());
     }
 
     private List<List<Chest>> PossiblePaths()
