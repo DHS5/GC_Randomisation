@@ -79,7 +79,9 @@ public class ChestGenerator : MonoBehaviour
 
     private void Init()
     {
-        SetSeed(1);
+        Seed = 1;
+
+        Generate();
     }
 
     public void Generate()
