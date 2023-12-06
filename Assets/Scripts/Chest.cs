@@ -19,9 +19,9 @@ public class Chest : MonoBehaviour
     public ChestGenerator.Key Key { get; private set; }
 
     public bool HasCondition => Key != ChestGenerator.Key.NO_CONDITION;
-    public bool IsFinalChest => ContainedKeys == null || ContainedKeys.Count == 0;
+    public bool IsFinalChest => ContainedKey == ChestGenerator.Key.NO_CONDITION;
 
-    public List<ChestGenerator.Key> ContainedKeys { get; private set; }
+    public ChestGenerator.Key ContainedKey { get; private set; } = ChestGenerator.Key.NO_CONDITION;
 
     #region Animation 
 
@@ -44,7 +44,7 @@ public class Chest : MonoBehaviour
     }
     private void BillboardSetContainingKeys()
     {
-        containsText.text = IsFinalChest ? "Final chest" : "Contains Key " + ContainedKeys[0];
+        containsText.text = IsFinalChest ? "Final chest" : "Contains Key " + ContainedKey;
     }
 
     #endregion
@@ -68,9 +68,9 @@ public class Chest : MonoBehaviour
         BillboardSetTitleAndKey(chestID, key);
     }
 
-    public void SetContainingKeyList(List<ChestGenerator.Key> keys)
+    public void SetContainingKey(ChestGenerator.Key key)
     {
-        ContainedKeys = keys;
+        ContainedKey = key;
         BillboardSetContainingKeys();
     }
 }

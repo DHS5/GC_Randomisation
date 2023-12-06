@@ -195,7 +195,7 @@ public class ChestGenerator : MonoBehaviour
     private void FillChest(Chest chest, Key key, List<Chest> chests)
     {
         // Fill chest
-        chest.SetContainingKeyList(new() { key });
+        chest.SetContainingKey(key);
 
         // If list null --> return
         if (chests == null) return;
@@ -226,14 +226,14 @@ public class ChestGenerator : MonoBehaviour
         {
             if (chest.HasCondition && !chest.IsFinalChest)
             {
-                if (chest.ContainedKeys.Contains(chest.Key))
+                if (chest.ContainedKey == chest.Key)
                 {
                     Key newKey;
                     do
                     {
                         newKey = keys[Random.Range(0, keys.Count)];
                     } while (newKey == chest.Key || newKey == Key.NO_CONDITION);
-                    chest.SetContainingKeyList(new() { newKey });
+                    chest.SetContainingKey(newKey);
                 }
             }
         }
