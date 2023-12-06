@@ -106,11 +106,7 @@ public class ChestGenerator : MonoBehaviour
     {
         Random.InitState(seed);
     }
-
-    private List<Key> GenerateChestContent()
-    {
-        return new List<Key>();
-    }
+    
     private void SetSeed(string seed)
     {
         if (int.TryParse(seed, out int intSeed))
@@ -234,6 +230,21 @@ public class ChestGenerator : MonoBehaviour
                         newKey = keys[Random.Range(0, keys.Count)];
                     } while (newKey == chest.Key || newKey == Key.NO_CONDITION);
                     chest.SetContainingKey(newKey);
+                }
+            }
+        }
+        ConstructChestGraph();
+    }
+    
+    private void ConstructChestGraph()
+    {
+        foreach (var chest in Chests)
+        {
+            foreach (var chest1 in Chests)
+            {
+                if (chest.ContainedKey == chest1.Key)
+                {
+                    chest.Childs.Add(chest1);
                 }
             }
         }

@@ -17,6 +17,7 @@ public class Chest : MonoBehaviour
 
     public ChestGenerator.ChestID ChestID { get; private set; }
     public ChestGenerator.Key Key { get; private set; }
+    public List<Chest> Childs { get; private set; }
 
     public bool HasCondition => Key != ChestGenerator.Key.NO_CONDITION;
     public bool IsFinalChest => ContainedKey == ChestGenerator.Key.NO_CONDITION;
