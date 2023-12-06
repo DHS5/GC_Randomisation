@@ -51,12 +51,12 @@ public class Chest : MonoBehaviour
         letterText.text = chestID.ToString();
         conditionText.text =
             key == ChestGenerator.Key.NO_CONDITION ?
-            "No condition"
-            : "Open with key " + key;
+            "Open"
+            : "Key : " + key;
     }
     private void BillboardSetContainingKeys()
     {
-        containsText.text = IsFinalChest ? "Final chest" : "Contains Key " + ContainedKey;
+        containsText.text = IsFinalChest ? "Final chest" : "Contains " + ContainedKey;
     }
 
     #endregion
