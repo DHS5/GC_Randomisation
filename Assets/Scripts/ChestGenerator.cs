@@ -187,14 +187,10 @@ public class ChestGenerator : MonoBehaviour
         }
 
         Chests.Remove(chest);
-        Debug.Log("remove chest");
 
         Arrow.CleanArrows();
-        Debug.Log("clean arrows");
         ConstructChestGraph();
-        Debug.Log("constructed");
         DisplayPaths();
-        Debug.Log("display");
     }
 
 
@@ -290,7 +286,7 @@ public class ChestGenerator : MonoBehaviour
         List<Chest> path = new();
         Chest start = Chests[^1];
         Chest end = Chests[0];
-        bool[] visited = new bool[Chests.Count];
+        bool[] visited = new bool[ChestCount];
         DFS(start, end, visited, path, paths);
         return paths;
     }
@@ -338,7 +334,6 @@ public class ChestGenerator : MonoBehaviour
             }
         }
 
-
         foreach (var child in chests.Where(c => c != chest && chest.ContainedKey == c.Key))
         {
             childList.Add(child);
@@ -350,7 +345,7 @@ public class ChestGenerator : MonoBehaviour
         chest.HasChilds = true;
 
         int rank = 0;
-        while (chests.Count > 0)
+        while (chests.Count > 0 && nextChildList.Count > 0)
         {
             rank++;
             formerChildList = new(nextChildList);
