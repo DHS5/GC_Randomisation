@@ -19,6 +19,8 @@ public class Chest : MonoBehaviour
 
     public bool HasCondition => Key != ChestGenerator.Key.NO_CONDITION;
 
+    public List<ChestGenerator.Key> ContainedKeys { get; private set; }
+
     #region Animation 
 
     public void OpenAnim()
@@ -56,5 +58,10 @@ public class Chest : MonoBehaviour
         Key = key;
 
         BillboardSetTitleAndKey(chestID, key);
+    }
+
+    public void SetContainingkeyList(List<ChestGenerator.Key> keys)
+    {
+        ContainedKeys = keys;
     }
 }
