@@ -112,8 +112,6 @@ public class ChestGenerator : MonoBehaviour
     {
         var pickList = new List<Key>()
         {
-            Key.NO_CONDITION,
-            Key.NO_CONDITION,
             Key.KEY1,
             Key.KEY2,
             Key.KEY3,
@@ -127,11 +125,17 @@ public class ChestGenerator : MonoBehaviour
         var finalList = new List<Key>() { Key.NO_CONDITION };
 
         int randomPick;
+        Key key;
         for (int i = 1; i < ChestCount; i++)
         {
             randomPick = Random.Range(0, pickList.Count);
-            finalList.Add(pickList[randomPick]);
-            pickList.RemoveAt(randomPick);
+            key = pickList[randomPick];
+
+            if (finalList.Contains(key))
+            {
+                pickList.RemoveAt(randomPick);
+            }
+            finalList.Add(key);
         }
 
         return finalList;
