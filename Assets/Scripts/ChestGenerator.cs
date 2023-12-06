@@ -331,6 +331,7 @@ public class ChestGenerator : MonoBehaviour
             {
                 ch.Parent.Clear();
                 ch.ChildsDict.Clear();
+                ch.HasChilds = false;
             }
         }
 
@@ -358,7 +359,6 @@ public class ChestGenerator : MonoBehaviour
                 if (!chest.HasChilds && chest.ContainedKey != Key.NO_CONDITION)
                 {
                     chest.HasChilds = true;
-                    //chest.Parent.Clear();
 
                     chests.Remove(chest);
 
