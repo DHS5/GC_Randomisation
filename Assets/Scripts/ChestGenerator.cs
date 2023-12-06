@@ -187,10 +187,14 @@ public class ChestGenerator : MonoBehaviour
         }
 
         Chests.Remove(chest);
+        Debug.Log("remove chest");
 
         Arrow.CleanArrows();
+        Debug.Log("clean arrows");
         ConstructChestGraph();
+        Debug.Log("constructed");
         DisplayPaths();
+        Debug.Log("display");
     }
 
 
