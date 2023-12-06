@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ChestGenerator : MonoBehaviour
 {
@@ -248,22 +250,55 @@ public class ChestGenerator : MonoBehaviour
         //Chests[0].CreateArrows();
     }
 
+    private List<List<Chest>> PossiblePaths()
+    {
+        List<List<Chest>> paths = new();
+        List<Chest> path = new();
+        Chest start = Chests[^1];
+        Chest end = Chests[0];
+        bool[] visited = new bool[Chests.Count];
+        DFS(start, end, visited, path, paths);
+        return paths;
+    }
+    
+    private void DFS(Chest current, Chest end, bool[] visited, List<Chest> path, List<List<Chest>> paths)
+    {
+        visited[(int)current.ChestID] = true;
+        path.Add(current);
+
+        if (current == end)
+        {
+            paths.Add(new List<Chest>(path));
+        }
+        else
+        {
+            foreach (var chest in current.Childs.Where(chest => !visited[(int)chest.ChestID]))
+            {
+                DFS(chest, end, visited, path, paths);
+            }
+        }
+
+        path.Remove(current);
+        visited[(int)current.ChestID] = false;
+    }
+
     private void ConstructChestGraph()
     {
         List<Chest> chests = new(Chests);
 
         Chest chest = Chests[0];
         chests.Remove(chest);
-        chests.Remove(Chests[Chests.Count - 1]);
+        chests.Remove(Chests[^1]);
 
         List<Chest> childList = new();
-        List<Chest> formerChildList = new();
+        List<Chest> formerChildList;
         List<Chest> nextChildList = new();
 
         foreach (var child in chests.Where(c => c != chest && chest.ContainedKey == c.Key))
         {
             childList.Add(child);
             nextChildList.Add(child);
+            child.Parent.Add(chest);
         }
         chest.ChildsDict.Add(0, childList);
         chest.CreateArrows();
@@ -290,6 +325,7 @@ public class ChestGenerator : MonoBehaviour
                     {
                         childList.Add(child);
                         nextChildList.Add(child);
+                        child.Parent.Add(chest);
                     }
 
                     chest.ChildsDict.Add(rank, childList);
@@ -309,9 +345,9 @@ public class ChestGenerator : MonoBehaviour
     
     private void ConstructChestGraph2Worker(Chest chest, int rank)
     {
-        if (chest.HasChilds || chest.ContainedKey == Key.NO_CONDITION) return;
+        if (chest.ContainedKey == Key.NO_CONDITION) return;
         
-        chest.HasChilds = true;
+        //chest.HasChilds = true;
 
         var childList = new List<Chest>();
         
