@@ -80,9 +80,13 @@ public class Chest : MonoBehaviour
 
     #region Arrow
 
+    private bool hasArrows;
+
     public void CreateArrows(int rank)
     {
-        if (Childs.Count == 0) return;
+        if (hasArrows || Childs.Count == 0) return;
+
+        hasArrows = true;
 
         foreach (var child in Childs)
         {
