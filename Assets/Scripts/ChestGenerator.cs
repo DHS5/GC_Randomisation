@@ -293,7 +293,7 @@ public class ChestGenerator : MonoBehaviour
         }
         else
         {
-            foreach (var chest in current.Childs)
+            foreach (var chest in current.Parent)
             {
                 if (!visited[(int)chest.ChestID])
                 {
@@ -303,6 +303,7 @@ public class ChestGenerator : MonoBehaviour
         }
 
         path.Remove(current);
+        // path.RemoveAt(path.Count - 1); // Use RemoveAt to remove the last element
         visited[(int)current.ChestID] = false;
     }
 
