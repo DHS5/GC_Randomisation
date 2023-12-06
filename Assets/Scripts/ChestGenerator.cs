@@ -186,20 +186,28 @@ public class ChestGenerator : MonoBehaviour
         //} while (finalChest.HasCondition);
         chests.Remove(finalChest);
 
-
+        FillChest(chests[Random.Range(0, chests.Count)], finalChest.Key, chests);
     }
-    private void FillChest(Chest chest, List<Chest> chests)
+    private void FillChest(Chest chest, Key key, List<Chest> chests)
     {
+        // Fill chest
+        chest.SetContainingKeyList(new() { key });
+
+        // If list null --> return
+        if (chests == null) return;
+
         // If nothing left --> first chest
         if (chests.Count == 0)
         {
-
+            FillChest(Chests[0], chest.Key, null);
         }
 
         // Get random chest
         else
         {
-
+            Chest nextChest = chests[Random.Range(0, chests.Count)];
+            chests.Remove(nextChest);
+            FillChest(nextChest, chest.Key, chests);
         }
     }
 

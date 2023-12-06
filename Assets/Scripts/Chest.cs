@@ -60,7 +60,7 @@ public class Chest : MonoBehaviour
         BillboardSetTitleAndKey(chestID, key);
     }
 
-    public void SetContainingkeyList(List<ChestGenerator.Key> keys)
+    public void SetContainingKeyList(List<ChestGenerator.Key> keys)
     {
         ContainedKeys = keys;
     }
