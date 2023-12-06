@@ -105,6 +105,7 @@ public class ChestGenerator : MonoBehaviour
         FillChests();
 
         CleanFillChest(keys);
+        DisplayPaths();
     }
     private void SetSeed(int seed)
     {
