@@ -80,21 +80,25 @@ public class Chest : MonoBehaviour
 
     #region Arrow
 
-    public void CreateArrows()
+    public void CreateArrows(int rank)
     {
+        if (Childs.Count == 0) return;
+
         foreach (var child in Childs)
         {
             if (child != null)
             {
-                CreateArrow(child);
+                CreateArrow(child, rank);
             }
         }
     }
-    private void CreateArrow(Chest chest)
+    private void CreateArrow(Chest chest, int rank)
     {
         Arrow arrow = Instantiate(_arrowPrefab).GetComponent<Arrow>();
 
-        arrow.Init(transform, chest.transform);
+        arrow.Init(transform, chest.transform, rank);
+
+        chest.CreateArrows(rank + 1);
     }
 
     #endregion

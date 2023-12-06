@@ -238,12 +238,13 @@ public class ChestGenerator : MonoBehaviour
         {
             if (chest.ContainedKey == Key.NO_CONDITION) continue;
 
-            foreach (var chest1 in Chests.Where(chest1 => chest.ContainedKey == chest1.Key))
+            foreach (var chest1 in Chests.Where(chest1 => chest1 != chest && chest.ContainedKey == chest1.Key))
             {
                 chest.Childs.Add(chest1);
-                chest.CreateArrows();
             }
         }
+
+        Chests[0].CreateArrows(0);
     }
 
 
