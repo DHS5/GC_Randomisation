@@ -174,11 +174,16 @@ public class ChestGenerator : MonoBehaviour
     {
         List<Chest> chests = new(Chests);
 
+        // Get Random Final Chest
         Chest finalChest;
-        do
-        {
-            finalChest = chests[Random.Range(0, chests.Count)];
-        } while (finalChest.HasCondition);
+        finalChest = chests[chests.Count - 1];
+        //do
+        //{
+        //    finalChest = chests[Random.Range(0, chests.Count)];
+        //} while (finalChest.HasCondition);
+        chests.Remove(finalChest);
+
+
     }
 
 
