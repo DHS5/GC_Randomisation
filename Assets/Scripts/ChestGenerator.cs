@@ -324,14 +324,23 @@ public class ChestGenerator : MonoBehaviour
         List<Chest> formerChildList;
         List<Chest> nextChildList = new();
 
-        chest.Parent.Clear();
+        // reset
+        foreach (var ch in Chests)
+        {
+            if (ch != null)
+            {
+                ch.Parent.Clear();
+                ch.ChildsDict.Clear();
+            }
+        }
+
+
         foreach (var child in chests.Where(c => c != chest && chest.ContainedKey == c.Key))
         {
             childList.Add(child);
             nextChildList.Add(child);
             child.Parent.Add(chest);
         }
-        chest.ChildsDict.Clear();
         chest.ChildsDict.Add(0, childList);
         chest.CreateArrows();
         chest.HasChilds = true;
@@ -350,7 +359,7 @@ public class ChestGenerator : MonoBehaviour
                 if (!chest.HasChilds && chest.ContainedKey != Key.NO_CONDITION)
                 {
                     chest.HasChilds = true;
-                    chest.Parent.Clear();
+                    //chest.Parent.Clear();
 
                     chests.Remove(chest);
 
@@ -361,7 +370,6 @@ public class ChestGenerator : MonoBehaviour
                         child.Parent.Add(chest);
                     }
 
-                    chest.ChildsDict.Clear();
                     chest.ChildsDict.Add(rank, childList);
                     chest.CreateArrows();
                 }
