@@ -23,7 +23,6 @@ public class Chest : MonoBehaviour
 
     public ChestGenerator.ChestID ChestID { get; private set; }
     public ChestGenerator.Key Key { get; private set; }
-    public List<Chest> Childs { get; private set; } = new();
     public List<Chest> Parent { get; private set; } = new();
     public bool HasChilds { get; set; }
     

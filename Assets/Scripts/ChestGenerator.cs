@@ -174,15 +174,18 @@ public class ChestGenerator : MonoBehaviour
     {
         if (chest.IsFinalChest || chest == Chests[0]) return;
 
-        foreach (var child in chest.Childs)
+        foreach (var rank in chest.ChildsDict)
         {
-            if (chest.Key == child.ContainedKey)
+            foreach (var child in rank.Value)
             {
-                child.SetTitleAndKey(child.ChestID, Chests[0].ContainedKey);
-            }
-            else
-            {
-                child.SetTitleAndKey(child.ChestID, chest.Key);
+                if (chest.Key == child.ContainedKey)
+                {
+                    child.SetTitleAndKey(child.ChestID, Chests[0].ContainedKey);
+                }
+                else
+                {
+                    child.SetTitleAndKey(child.ChestID, chest.Key);
+                }
             }
         }
 
