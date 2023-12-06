@@ -21,6 +21,8 @@ public class Chest : MonoBehaviour
     public ChestGenerator.ChestID ChestID { get; private set; }
     public ChestGenerator.Key Key { get; private set; }
     public List<Chest> Childs { get; private set; } = new();
+    
+    public Dictionary<int, List<Chest>> ChildsDict { get; private set; } = new();
 
     public bool HasCondition => Key != ChestGenerator.Key.NO_CONDITION;
     public bool IsFinalChest => ContainedKey == ChestGenerator.Key.NO_CONDITION;
@@ -102,7 +104,7 @@ public class Chest : MonoBehaviour
 
         arrow.Init(transform, chest.transform, rank);
 
-        chest.CreateArrows(rank + 1);
+        //chest.CreateArrows(rank + 1);
     }
 
     #endregion

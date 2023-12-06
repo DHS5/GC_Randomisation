@@ -229,7 +229,8 @@ public class ChestGenerator : MonoBehaviour
             chest.SetContainingKey(newKey);
         }
 
-        ConstructChestGraph();
+        //ConstructChestGraph();
+        ConstructChestGraph2();
     }
     
     private void ConstructChestGraph()
@@ -246,6 +247,36 @@ public class ChestGenerator : MonoBehaviour
 
         Chests[0].CreateArrows(0);
     }
+    
+    private void ConstructChestGraph2()
+    {
+        var chest = Chests[0];
+        var rank = 0;
+        
+        ConstructChestGraph2Worker(chest, rank);
+    }
+    
+    private void ConstructChestGraph2Worker(Chest chest, int rank)
+    {
+        if (chest.ContainedKey == Key.NO_CONDITION) return;
+        
+        var childList = new List<Chest>();
+        
+        foreach (var chest1 in Chests.Where(chest1 => chest1 != chest && chest.ContainedKey == chest1.Key))
+        {
+            childList.Add(chest1);
+        }
+        
+        if (childList.Count == 0) return;
+        
+        chest.ChildsDict.Add(rank, childList);
+        
+        foreach (var child in childList)
+        {
+            ConstructChestGraph2Worker(child, rank + 1);
+        }
+    }
+
 
 
     private void Clean()
