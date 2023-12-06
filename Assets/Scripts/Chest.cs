@@ -12,6 +12,7 @@ public class Chest : MonoBehaviour
     [Space(10f)]
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI conditionText;
+    private static readonly int Open = Animator.StringToHash("Open");
 
     public ChestGenerator.ChestID ChestID { get; private set; }
     public ChestGenerator.Key Key { get; private set; }
@@ -22,7 +23,7 @@ public class Chest : MonoBehaviour
 
     public void OpenAnim()
     {
-        animator.SetTrigger("Open");
+        animator.SetTrigger(Open);
     }
 
     #endregion
