@@ -174,6 +174,9 @@ public class ChestGenerator : MonoBehaviour
     {
         List<Chest> chests = new(Chests);
 
+        // Remove First Chest
+        chests.RemoveAt(0);
+
         // Get Random Final Chest
         Chest finalChest;
         finalChest = chests[chests.Count - 1];
@@ -184,6 +187,20 @@ public class ChestGenerator : MonoBehaviour
         chests.Remove(finalChest);
 
 
+    }
+    private void FillChest(Chest chest, List<Chest> chests)
+    {
+        // If nothing left --> first chest
+        if (chests.Count == 0)
+        {
+
+        }
+
+        // Get random chest
+        else
+        {
+
+        }
     }
 
 
