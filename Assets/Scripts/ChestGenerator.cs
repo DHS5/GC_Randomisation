@@ -178,11 +178,11 @@ public class ChestGenerator : MonoBehaviour
         {
             if (chest.Key == child.ContainedKey)
             {
-                child.Key = Chests[0].ContainedKey;
+                child.SetTitleAndKey(child.ChestID, Chests[0].ContainedKey);
             }
             else
             {
-                child.Key = chest.Key;
+                child.SetTitleAndKey(child.ChestID, chest.Key);
             }
         }
 
