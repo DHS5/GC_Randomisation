@@ -29,6 +29,9 @@ public class ChestGenerator : MonoBehaviour
     [Header("Prefabs")]
     [SerializeField] private GameObject _chestPrefab;
 
+
+    public List<Chest> Chests { get; private set; }
+
     #endregion
 
     public const int ChestCount = 10;
@@ -85,9 +88,10 @@ public class ChestGenerator : MonoBehaviour
 
         List<Key> keys = GetKeyList();
 
+        Chests = new();
         for (int i = 0; i < ChestCount; i++)
         {
-            GenerateChest((ChestID)i, keys[i]);
+            Chests.Add(GenerateChest((ChestID)i, keys[i]));
         }
     }
     private void SetSeed(int seed)
