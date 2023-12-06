@@ -86,6 +86,8 @@ public class ChestGenerator : MonoBehaviour
 
     public void Generate()
     {
+        Clean();
+
         SetSeed(Seed);
 
         List<Key> keys = GetKeyList();
@@ -147,5 +149,19 @@ public class ChestGenerator : MonoBehaviour
         chest.SetTitleAndKey(chestID, key);
 
         return chest;
+    }
+
+
+    private void Clean()
+    {
+        if (Chests == null || Chests.Count == 0) return;
+
+        foreach (var chest in Chests)
+        {
+            if (chest != null)
+            {
+                Destroy(chest.gameObject);
+            }
+        }
     }
 }
