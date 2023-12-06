@@ -156,6 +156,18 @@ public class ChestGenerator : MonoBehaviour
     }
 
 
+    private void FillChests()
+    {
+        List<Chest> chests = new(Chests);
+
+        Chest finalChest;
+        do
+        {
+            finalChest = chests[Random.Range(0, chests.Count)];
+        } while (finalChest.HasCondition);
+    }
+
+
     private void Clean()
     {
         if (Chests == null || Chests.Count == 0) return;
