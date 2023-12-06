@@ -237,6 +237,7 @@ public class ChestGenerator : MonoBehaviour
         foreach (var chest in Chests)
         {
             if (chest.ContainedKey == Key.NO_CONDITION) continue;
+
             foreach (var chest1 in Chests.Where(chest1 => chest.ContainedKey == chest1.Key))
             {
                 chest.Childs.Add(chest1);
@@ -248,6 +249,8 @@ public class ChestGenerator : MonoBehaviour
 
     private void Clean()
     {
+        Arrow.CleanArrows();
+
         if (Chests == null || Chests.Count == 0) return;
 
         foreach (var chest in Chests.Where(chest => chest != null))
