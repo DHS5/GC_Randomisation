@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -86,15 +87,17 @@ public class Chest : MonoBehaviour
 
     #region Arrow
 
-    public void CreateArrows(int rank)
+    public void CreateArrows()
     {
-        if (Childs.Count == 0) return;
+        if (ChildsDict.Count == 0) return;
 
-        foreach (var child in Childs)
+        foreach (var rank in ChildsDict)
         {
+            foreach (var child in rank.Value)
+
             if (child != null)
             {
-                CreateArrow(child, rank);
+                CreateArrow(child, rank.Key);
             }
         }
     }

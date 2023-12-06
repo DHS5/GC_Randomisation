@@ -229,11 +229,11 @@ public class ChestGenerator : MonoBehaviour
             chest.SetContainingKey(newKey);
         }
 
-        //ConstructChestGraph();
-        ConstructChestGraph2();
+        ConstructChestGraph();
+        //ConstructChestGraph2();
     }
     
-    private void ConstructChestGraph()
+    private void ConstructChestGraph1()
     {
         foreach (var chest in Chests)
         {
@@ -245,7 +245,58 @@ public class ChestGenerator : MonoBehaviour
             }
         }
 
-        Chests[0].CreateArrows(0);
+        //Chests[0].CreateArrows();
+    }
+
+    private void ConstructChestGraph()
+    {
+        List<Chest> chests = new(Chests);
+
+        Chest chest = Chests[0];
+        chests.Remove(chest);
+        chests.Remove(Chests[Chests.Count - 1]);
+
+        List<Chest> childList = new();
+        List<Chest> formerChildList = new();
+        List<Chest> nextChildList = new();
+
+        foreach (var child in chests.Where(c => c != chest && chest.ContainedKey == c.Key))
+        {
+            childList.Add(child);
+            nextChildList.Add(child);
+        }
+        chest.ChildsDict.Add(0, childList);
+        chest.CreateArrows();
+        chest.HasChilds = true;
+
+        int rank = 0;
+        while (chests.Count > 0)
+        {
+            rank++;
+            formerChildList = new(nextChildList);
+            nextChildList.Clear();
+
+            for (int i = 0; i < formerChildList.Count; i++)
+            {
+                childList.Clear();
+                chest = formerChildList[i];
+                if (!chest.HasChilds && chest.ContainedKey != Key.NO_CONDITION)
+                {
+                    chest.HasChilds = true;
+
+                    chests.Remove(chest);
+
+                    foreach (var child in Chests.Where(c => c != chest && chest.ContainedKey == c.Key))
+                    {
+                        childList.Add(child);
+                        nextChildList.Add(child);
+                    }
+
+                    chest.ChildsDict.Add(rank, childList);
+                    chest.CreateArrows();
+                }
+            }
+        }
     }
     
     private void ConstructChestGraph2()
@@ -272,6 +323,7 @@ public class ChestGenerator : MonoBehaviour
         if (childList.Count == 0) return;
         
         chest.ChildsDict.Add(rank, childList);
+        chest.CreateArrows();
         
         foreach (var child in childList)
         {
