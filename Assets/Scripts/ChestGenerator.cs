@@ -103,6 +103,18 @@ public class ChestGenerator : MonoBehaviour
         Random.InitState(seed);
     }
 
+    private List<Key> GenerateChestContent()
+    {
+        return new List<Key>();
+    }
+    private void SetSeed(string seed)
+    {
+        if (int.TryParse(seed, out int intSeed))
+        {
+            SetSeed(intSeed);
+        }
+    }
+
     /// <summary>
     /// Get a list of 10 keys including at least one NO_CONDITION to make sure you can start,
     /// and 9 other unique keys (including possible other NO_CONDITION) in random order
