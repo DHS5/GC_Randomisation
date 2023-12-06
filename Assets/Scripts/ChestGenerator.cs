@@ -31,6 +31,7 @@ public class ChestGenerator : MonoBehaviour
 
     #endregion
 
+    public const int ChestCount = 10;
 
     public string StrSeed
     {
@@ -82,19 +83,63 @@ public class ChestGenerator : MonoBehaviour
     {
         SetSeed(Seed);
 
-        // Generate
+        List<Key> keys = GetKeyList();
+
+        for (int i = 0; i < ChestCount; i++)
+        {
+            GenerateChest((ChestID)i, keys[i]);
+        }
     }
     private void SetSeed(int seed)
     {
         Random.InitState(seed);
     }
 
+    /// <summary>
+    /// Get a list of 10 keys including at least one NO_CONDITION to make sure you can start,
+    /// and 9 other unique keys (including possible other NO_CONDITION) in random order
+    /// </summary>
+    /// <returns></returns>
+    private List<Key> GetKeyList()
+    {
+        var pickList = new List<Key>()
+        {
+            Key.NO_CONDITION,
+            Key.NO_CONDITION,
+            Key.KEY1,
+            Key.KEY2,
+            Key.KEY3,
+            Key.KEY4,
+            Key.KEY5,
+            Key.KEY6,
+            Key.KEY7,
+            Key.KEY8,
+            Key.KEY9,
+        };
+        var finalList = new List<Key>() { Key.NO_CONDITION };
 
-    private void GenerateChest(ChestID chestID, Key key)
+        int randomPick;
+        for (int i = 1; i < ChestCount; i++)
+        {
+            randomPick = Random.Range(0, pickList.Count);
+            finalList.Add(pickList[randomPick]);
+            pickList.RemoveAt(randomPick);
+        }
+
+        return finalList;
+    }
+
+    /// <summary>
+    /// Generate a chest with a unique Key to access or no condition
+    /// </summary>
+    /// <param name="chestID"></param>
+    /// <param name="key"></param>
+    private Chest GenerateChest(ChestID chestID, Key key)
     {
         Chest chest = Instantiate(_chestPrefab, _chestAnchors[(int)chestID]).GetComponent<Chest>();
 
-        chest.SetTitle(chestID);
-        chest.SetCondition(key);
+        chest.SetTitleAndKey(chestID, key);
+
+        return chest;
     }
 }

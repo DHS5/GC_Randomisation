@@ -13,6 +13,9 @@ public class Chest : MonoBehaviour
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI conditionText;
 
+    public ChestGenerator.ChestID ChestID { get; private set; }
+    public ChestGenerator.Key Key { get; private set; }
+
 
     #region Animation 
 
@@ -25,12 +28,9 @@ public class Chest : MonoBehaviour
 
     #region Billboard
 
-    public void SetTitle(ChestGenerator.ChestID chestID)
+    private void BillboardSetTitleAndKey(ChestGenerator.ChestID chestID, ChestGenerator.Key key)
     {
         titleText.text = "Chest " + chestID;
-    }
-    public void SetCondition(ChestGenerator.Key key)
-    {
         conditionText.text =
             key == ChestGenerator.Key.NO_CONDITION ?
             "No condition"
@@ -38,4 +38,12 @@ public class Chest : MonoBehaviour
     }
 
     #endregion
+
+    public void SetTitleAndKey(ChestGenerator.ChestID chestID, ChestGenerator.Key key)
+    {
+        ChestID = chestID;
+        Key = key;
+
+        BillboardSetTitleAndKey(chestID, key);
+    }
 }
