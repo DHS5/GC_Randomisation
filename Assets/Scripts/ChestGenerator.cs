@@ -170,7 +170,7 @@ public class ChestGenerator : MonoBehaviour
         return chest;
     }
     
-    private void ShortChest(Chest chest)
+    public void ShortChest(Chest chest)
     {
         if (chest.IsFinalChest || chest == Chests[0]) return;
 
@@ -178,11 +178,19 @@ public class ChestGenerator : MonoBehaviour
         {
             if (chest.Key == child.ContainedKey)
             {
-                child.Key = Chests[0].Key;
-            } 
-            child.Key = chest.Key;
-            
+                child.Key = Chests[0].ContainedKey;
+            }
+            else
+            {
+                child.Key = chest.Key;
+            }
         }
+
+        Chests.Remove(chest);
+
+        Arrow.CleanArrows();
+        ConstructChestGraph();
+        DisplayPaths();
     }
 
 
@@ -236,7 +244,7 @@ public class ChestGenerator : MonoBehaviour
 
     private void CleanFillChest(IReadOnlyList<Key> keys)
     {
-        foreach (var chest in Chests.Where(chest => chest.HasCondition && !chest.IsFinalChest).Where(chest => chest.ContainedKey == chest.Key))
+        foreach (var chest in Chests.Where(chest => chest.HasCondition && !chest.IsFinalChest && chest.ContainedKey == chest.Key))
         {
             Key newKey;
             do
@@ -332,12 +340,14 @@ public class ChestGenerator : MonoBehaviour
         List<Chest> formerChildList;
         List<Chest> nextChildList = new();
 
+        chest.Parent.Clear();
         foreach (var child in chests.Where(c => c != chest && chest.ContainedKey == c.Key))
         {
             childList.Add(child);
             nextChildList.Add(child);
             child.Parent.Add(chest);
         }
+        chest.ChildsDict.Clear();
         chest.ChildsDict.Add(0, childList);
         chest.CreateArrows();
         chest.HasChilds = true;
@@ -356,6 +366,7 @@ public class ChestGenerator : MonoBehaviour
                 if (!chest.HasChilds && chest.ContainedKey != Key.NO_CONDITION)
                 {
                     chest.HasChilds = true;
+                    chest.Parent.Clear();
 
                     chests.Remove(chest);
 
@@ -366,6 +377,7 @@ public class ChestGenerator : MonoBehaviour
                         child.Parent.Add(chest);
                     }
 
+                    chest.ChildsDict.Clear();
                     chest.ChildsDict.Add(rank, childList);
                     chest.CreateArrows();
                 }

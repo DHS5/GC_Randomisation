@@ -65,9 +65,17 @@ public class Chest : MonoBehaviour
 
     private void OnMouseDown()
     {
-        OpenAnim();
-        containsText.gameObject.SetActive(true);
-        BillboardSetContainingKeys();
+        if (ChestGenerator.Instance.IsBinActive)
+        {
+            ChestGenerator.Instance.ShortChest(this);
+            Destroy(gameObject);
+        }
+        else
+        {
+            OpenAnim();
+            containsText.gameObject.SetActive(true);
+            BillboardSetContainingKeys();
+        }
     }
 
     #endregion
