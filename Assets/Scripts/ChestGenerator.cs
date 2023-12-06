@@ -344,7 +344,7 @@ public class ChestGenerator : MonoBehaviour
             nextChildList.Add(child);
             child.Parent.Add(chest);
         }
-        chest.ChildsDict.Add(0, childList);
+        chest.ChildsDict[0] = new(childList);
         chest.CreateArrows();
         chest.HasChilds = true;
 
@@ -372,7 +372,7 @@ public class ChestGenerator : MonoBehaviour
                         child.Parent.Add(chest);
                     }
 
-                    chest.ChildsDict.Add(rank, childList);
+                    chest.ChildsDict[rank] = new(childList);
                     chest.CreateArrows();
                 }
             }

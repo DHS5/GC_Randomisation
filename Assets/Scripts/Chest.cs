@@ -26,7 +26,7 @@ public class Chest : MonoBehaviour
     public List<Chest> Parent { get; private set; } = new();
     public bool HasChilds { get; set; }
     
-    public Dictionary<int, List<Chest>> ChildsDict { get; private set; } = new();
+    public Dictionary<int, List<Chest>> ChildsDict { get; set; } = new();
 
     public bool HasCondition => Key != ChestGenerator.Key.NO_CONDITION;
     public bool IsFinalChest => ContainedKey == ChestGenerator.Key.NO_CONDITION;
@@ -81,6 +81,7 @@ public class Chest : MonoBehaviour
 
     public void SetTitleAndKey(ChestGenerator.ChestID chestID, ChestGenerator.Key key)
     {
+        Debug.Log(ChestID + " " + chestID + " " + Key + " to " + key);
         ChestID = chestID;
         Key = key;
 
@@ -102,10 +103,11 @@ public class Chest : MonoBehaviour
         foreach (var rank in ChildsDict)
         {
             foreach (var child in rank.Value)
-
-            if (child != null)
             {
-                CreateArrow(child, rank.Key);
+                if (child != null)
+                {
+                    CreateArrow(child, rank.Key);
+                }
             }
         }
     }
@@ -114,8 +116,17 @@ public class Chest : MonoBehaviour
         Arrow arrow = Instantiate(_arrowPrefab).GetComponent<Arrow>();
 
         arrow.Init(transform, chest.transform, rank);
+    }
 
-        //chest.CreateArrows(rank + 1);
+    public void DisplayChild()
+    {
+        foreach (var pair in ChildsDict)
+        {
+            foreach (var child in pair.Value)
+            {
+                Debug.Log(ChestID + " has child " + child.ChestID);
+            }
+        }
     }
 
     #endregion
