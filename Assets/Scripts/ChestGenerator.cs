@@ -112,14 +112,6 @@ public class ChestGenerator : MonoBehaviour
     {
         Random.InitState(seed);
     }
-    
-    private void SetSeed(string seed)
-    {
-        if (int.TryParse(seed, out int intSeed))
-        {
-            SetSeed(intSeed);
-        }
-    }
 
     /// <summary>
     /// Get a list of 10 keys including at least one NO_CONDITION to make sure you can start,
@@ -171,6 +163,21 @@ public class ChestGenerator : MonoBehaviour
         chest.SetTitleAndKey(chestID, key);
 
         return chest;
+    }
+    
+    private void ShortChest(Chest chest)
+    {
+        if (chest.IsFinalChest || chest == Chests[0]) return;
+
+        foreach (var child in chest.Childs)
+        {
+            if (chest.Key == child.ContainedKey)
+            {
+                child.Key = Chests[0].Key;
+            } 
+            child.Key = chest.Key;
+            
+        }
     }
 
 
