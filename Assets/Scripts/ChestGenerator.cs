@@ -156,7 +156,8 @@ public class ChestGenerator : MonoBehaviour
         {
             if (chest.ChildsDict.Count > 0 
                 && chest.ChildsDict.First().Value.Count > 0
-                && chest.ChildsDict.First().Value[0].Parent.Count > 1)
+                && chest.ChildsDict.First().Value[0].Parent.Count > 1
+                && !chest.IsParentOfParent)
             {
                 if (chest.Parent != null && chest.Parent.Count > 0)
                 {

@@ -46,6 +46,24 @@ public class Chest : MonoBehaviour
     public bool HasCondition => Key != ChestGenerator.Key.NO_CONDITION;
     public bool IsFinalChest => ContainedKey == ChestGenerator.Key.NO_CONDITION;
 
+    public bool IsParentOfParent
+    {
+        get
+        {
+            if (Parent == null || Parent.Count == 0) return false;
+            foreach (var parent in Parent)
+            {
+                if (parent.HasChild(this)) return true;
+            }
+            return false;
+        }
+    }
+    public bool HasChild(Chest chest)
+    {
+        if (ChildsDict.First().Value.Count == 0) return false;
+        return ChildsDict.First().Value.Contains(chest);
+    }
+
     public ChestGenerator.Key ContainedKey { get; private set; } = ChestGenerator.Key.NO_CONDITION;
 
     #region Animation
