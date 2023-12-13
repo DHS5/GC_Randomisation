@@ -1,8 +1,5 @@
-using JetBrains.Annotations;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.XR;
 using UnityEngine;
 
 public class Chest : MonoBehaviour
