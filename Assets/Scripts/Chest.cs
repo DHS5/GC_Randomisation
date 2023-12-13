@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class Chest : MonoBehaviour
@@ -11,21 +12,29 @@ public class Chest : MonoBehaviour
     [Header("Chest")] [Header("References")] [SerializeField]
     private Animator animator;
 
-    [SerializeField] private Renderer _topRenderer;
-    [SerializeField] private Renderer _bottomRenderer;
+    [FormerlySerializedAs("_topRenderer")] [SerializeField]
+    private Renderer topRenderer;
+
+    [FormerlySerializedAs("_bottomRenderer")] [SerializeField]
+    private Renderer bottomRenderer;
 
     [Space(10f)] [SerializeField] private TextMeshProUGUI titleText;
 
     [SerializeField] private TextMeshPro letterText;
     [SerializeField] private TextMeshProUGUI conditionText;
     [SerializeField] private TextMeshProUGUI containsText;
-    [SerializeField] private Image _foregroundImage;
 
-    [Header("Prefabs")] [SerializeField] private GameObject _arrowPrefab;
+    [FormerlySerializedAs("_foregroundImage")] [SerializeField]
+    private Image foregroundImage;
 
-    [Header("Materials")] [SerializeField] private Material _lockedMat;
+    [FormerlySerializedAs("_arrowPrefab")] [Header("Prefabs")] [SerializeField]
+    private GameObject arrowPrefab;
 
-    [SerializeField] private Material _unlockedMat;
+    [FormerlySerializedAs("_lockedMat")] [Header("Materials")] [SerializeField]
+    private Material lockedMat;
+
+    [FormerlySerializedAs("_unlockedMat")] [SerializeField]
+    private Material unlockedMat;
 
     public ChestGenerator.ChestID ChestID { get; private set; }
     public ChestGenerator.Key Key { get; private set; }
@@ -84,14 +93,15 @@ public class Chest : MonoBehaviour
         containsText.text = "";
     }
 
-    public void SetFocus()
+    private void SetFocus()
     {
-        _foregroundImage.gameObject.SetActive(true);
+        foregroundImage.gameObject.SetActive(true);
         Invoke(nameof(UnsetFocus), 3f);
     }
+
     private void UnsetFocus()
     {
-        _foregroundImage.gameObject.SetActive(false);
+        foregroundImage.gameObject.SetActive(false);
     }
 
     #endregion
@@ -108,8 +118,8 @@ public class Chest : MonoBehaviour
             _isOpenable = value;
             if (value == false) BillboardResetContainingKeys();
 
-            _topRenderer.sharedMaterial = value ? _unlockedMat : _lockedMat;
-            _bottomRenderer.sharedMaterial = value ? _unlockedMat : _lockedMat;
+            topRenderer.sharedMaterial = value ? unlockedMat : lockedMat;
+            bottomRenderer.sharedMaterial = value ? unlockedMat : lockedMat;
         }
     }
 
@@ -127,16 +137,8 @@ public class Chest : MonoBehaviour
             containsText.gameObject.SetActive(true);
             BillboardSetContainingKeys();
 
-            foreach (var pair in ChildsDict)
-            {
-                foreach (var child in pair.Value)
-                {
-                    if (child != null)
-                    {
-                        child.SetFocus();
-                    }
-                }
-            }
+            foreach (var child in ChildsDict.SelectMany(pair => pair.Value.Where(child => child != null)))
+                child.SetFocus();
         }
     }
 
@@ -159,7 +161,7 @@ public class Chest : MonoBehaviour
 
     private void CreateArrow(Chest chest, int rank)
     {
-        var arrow = Instantiate(_arrowPrefab).GetComponent<Arrow>();
+        var arrow = Instantiate(arrowPrefab).GetComponent<Arrow>();
 
         _arrows.Add(chest.ChestID, arrow);
         arrow.Init(transform, chest.transform, rank);
@@ -174,12 +176,6 @@ public class Chest : MonoBehaviour
     public void SetArrowsActive(bool active, ChestGenerator.ChestID chestID, int rank)
     {
         if (_arrows.TryGetValue(chestID, out var arrow)) arrow.SetActive(active, rank);
-    }
-
-    public void DisplayChild()
-    {
-        foreach (var child in ChildsDict.SelectMany(pair => pair.Value))
-            Debug.Log(ChestID + " has child " + child.ChestID);
     }
 
     #endregion

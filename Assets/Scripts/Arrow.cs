@@ -1,19 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Arrow : MonoBehaviour
 {
     private static readonly List<Arrow> Arrows = new();
-    [SerializeField] private LineRenderer _lineRenderer;
 
-    [Space(5f)] [SerializeField] private Gradient _colorGradient;
+    [FormerlySerializedAs("_lineRenderer")] [SerializeField]
+    private LineRenderer lineRenderer;
+
+    [FormerlySerializedAs("_colorGradient")] [Space(5f)] [SerializeField]
+    private Gradient colorGradient;
 
     private int _rank;
 
-    public void Init(Transform origin, Transform destination, int _rank)
+    public void Init(Transform origin, Transform destination, int rank)
     {
-        this._rank = _rank;
+        _rank = rank;
 
         var originPos = origin.position;
         var destinationPos = destination.position;
@@ -25,12 +29,12 @@ public class Arrow : MonoBehaviour
 
         originPos.y = 0.35f;
 
-        _lineRenderer.SetPosition(0, originPos + offset * dir);
-        _lineRenderer.SetPosition(1, originPos + (offset + dist * 0.89f) * dir);
-        _lineRenderer.SetPosition(2, originPos + (offset + dist * 0.9f) * dir);
-        _lineRenderer.SetPosition(3, originPos + (offset + dist) * dir);
-        _lineRenderer.startColor = _colorGradient.Evaluate((float)this._rank / 8);
-        _lineRenderer.endColor = _colorGradient.Evaluate((float)this._rank / 8);
+        lineRenderer.SetPosition(0, originPos + offset * dir);
+        lineRenderer.SetPosition(1, originPos + (offset + dist * 0.89f) * dir);
+        lineRenderer.SetPosition(2, originPos + (offset + dist * 0.9f) * dir);
+        lineRenderer.SetPosition(3, originPos + (offset + dist) * dir);
+        lineRenderer.startColor = colorGradient.Evaluate((float)_rank / 8);
+        lineRenderer.endColor = colorGradient.Evaluate((float)_rank / 8);
 
         Arrows.Add(this);
 
@@ -39,20 +43,20 @@ public class Arrow : MonoBehaviour
 
     public void SetActive(bool active)
     {
-        _lineRenderer.enabled = active;
+        lineRenderer.enabled = active;
 
         if (!active) return;
-        _lineRenderer.startColor = _colorGradient.Evaluate((float)_rank / 8);
-        _lineRenderer.endColor = _colorGradient.Evaluate((float)_rank / 8);
+        lineRenderer.startColor = colorGradient.Evaluate((float)_rank / 8);
+        lineRenderer.endColor = colorGradient.Evaluate((float)_rank / 8);
     }
 
     public void SetActive(bool active, int pathRank)
     {
-        _lineRenderer.enabled = active;
+        lineRenderer.enabled = active;
 
         if (!active) return;
-        _lineRenderer.startColor = _colorGradient.Evaluate((float)pathRank / 8);
-        _lineRenderer.endColor = _colorGradient.Evaluate((float)pathRank / 8);
+        lineRenderer.startColor = colorGradient.Evaluate((float)pathRank / 8);
+        lineRenderer.endColor = colorGradient.Evaluate((float)pathRank / 8);
     }
 
     public static void CleanArrows()
