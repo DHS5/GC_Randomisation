@@ -152,42 +152,39 @@ public class ChestGenerator : MonoBehaviour
     {
         if (chest.IsFinalChest || chest == Chests[0]) return false;
 
-        if (chest.ContainedKey != Chests[0].ContainedKey)
+        if (chest.ChildsDict.Count > 0 
+            && chest.ChildsDict.First().Value.Count > 0
+            && chest.ChildsDict.First().Value[0].Parent.Count > 1
+            && !chest.IsParentOfParent)
         {
-            if (chest.ChildsDict.Count > 0 
-                && chest.ChildsDict.First().Value.Count > 0
-                && chest.ChildsDict.First().Value[0].Parent.Count > 1
-                && !chest.IsParentOfParent)
+            if (chest.Parent != null && chest.Parent.Count > 0)
             {
-                if (chest.Parent != null && chest.Parent.Count > 0)
+                List<Key> activeKeys = new();
+                foreach (var c in Chests)
                 {
-                    List<Key> activeKeys = new();
-                    foreach (var c in Chests)
+                    activeKeys.Add(c.Key);
+                }
+                foreach (var parent in chest.Parent)
+                {
+                    if (parent.ChildsDict.Count > 0
+                        && parent.ChildsDict.First().Value.Count < 2)
                     {
-                        activeKeys.Add(c.Key);
-                    }
-                    foreach (var parent in chest.Parent)
-                    {
-                        if (parent.ChildsDict.Count > 0
-                            && parent.ChildsDict.First().Value.Count < 2)
+                        Key newKey;
+                        do
                         {
-                            Key newKey;
-                            do
-                            {
-                                newKey = Keys[Random.Range(1, Keys.Count)];
-                            } while (newKey == Key.NO_CONDITION && newKey == parent.ContainedKey
-                                && activeKeys.Contains(newKey));
-                            parent.SetContainingKey(newKey);
-                        }
+                            newKey = Keys[Random.Range(1, Keys.Count)];
+                        } while (newKey == Key.NO_CONDITION && newKey == parent.ContainedKey
+                            && activeKeys.Contains(newKey));
+                        parent.SetContainingKey(newKey);
                     }
                 }
             }
-            else
-            {
-                foreach (var child in chest.ChildsDict.SelectMany(rank => rank.Value))
-                    child.SetTitleAndKey(child.ChestID,
-                        chest.Key == child.ContainedKey ? Chests[0].ContainedKey : chest.Key);
-            }
+        }
+        else if (chest.ContainedKey != Chests[0].ContainedKey)
+        {
+            foreach (var child in chest.ChildsDict.SelectMany(rank => rank.Value))
+                child.SetTitleAndKey(child.ChestID,
+                    chest.Key == child.ContainedKey ? Chests[0].ContainedKey : chest.Key);
         }
 
 
