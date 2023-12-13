@@ -39,6 +39,22 @@ public class Arrow : MonoBehaviour
     public void SetActive(bool active)
     {
         _lineRenderer.enabled = active;
+
+        if (active)
+        {
+            _lineRenderer.startColor = _colorGradient.Evaluate((float)rank / 8);
+            _lineRenderer.endColor = _colorGradient.Evaluate((float)rank / 8);
+        }
+    }
+    public void SetActive(bool active, int pathRank)
+    {
+        _lineRenderer.enabled = active;
+
+        if (active)
+        {
+            _lineRenderer.startColor = _colorGradient.Evaluate((float)pathRank / 8);
+            _lineRenderer.endColor = _colorGradient.Evaluate((float)pathRank / 8);
+        }
     }
 
 

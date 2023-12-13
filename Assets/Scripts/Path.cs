@@ -38,7 +38,7 @@ public class Path
         {
             if (chests[i] != null)
             {
-                chests[i].SetArrowsActive(active, chests[i + 1].ChestID);
+                chests[i].SetArrowsActive(active, chests[i + 1].ChestID, i);
             }
         }
     }

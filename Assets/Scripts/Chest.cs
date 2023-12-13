@@ -158,11 +158,11 @@ public class Chest : MonoBehaviour
             }
         }
     }
-    public void SetArrowsActive(bool active, ChestGenerator.ChestID chestID)
+    public void SetArrowsActive(bool active, ChestGenerator.ChestID chestID, int rank)
     {
         if (arrows.ContainsKey(chestID))
         {
-            arrows[chestID].SetActive(active);
+            arrows[chestID].SetActive(active, rank);
         }
     }
 
