@@ -61,6 +61,7 @@ public class ChestGenerator : MonoBehaviour
     public Path CurrentPath => Paths[PathIndex];
     private int PathIndex { get; set; }
 
+    private List<Key> Keys { get; set; }
 
     private void Init()
     {
@@ -75,14 +76,14 @@ public class ChestGenerator : MonoBehaviour
 
         SetSeed(Seed);
 
-        var keys = GetKeyList();
+        Keys = GetKeyList();
 
         Chests = new List<Chest>();
-        for (var i = 0; i < ChestCount; i++) Chests.Add(GenerateChest((ChestID)i, keys[i]));
+        for (var i = 0; i < ChestCount; i++) Chests.Add(GenerateChest((ChestID)i, Keys[i]));
 
         FillChests();
 
-        CleanFillChest(keys);
+        CleanFillChest(Keys);
         ConstructChestGraph();
         DisplayPaths();
     }
@@ -153,12 +154,33 @@ public class ChestGenerator : MonoBehaviour
 
         if (chest.ContainedKey != Chests[0].ContainedKey)
         {
-            Debug.Log(chest.ChildsDict.First());
-            Debug.Log(chest.ChildsDict.First().Value[0]);
-            Debug.Log(chest.ChildsDict.First().Value[0].Parent);
-            if (chest.ChildsDict.First().Value[0].Parent.Count > 1)
+            if (chest.ChildsDict.Count > 0 
+                && chest.ChildsDict.First().Value.Count > 0
+                && chest.ChildsDict.First().Value[0].Parent.Count > 1)
             {
-
+                if (chest.Parent != null && chest.Parent.Count > 0)
+                {
+                    List<Key> activeKeys = new();
+                    foreach (var c in Chests)
+                    {
+                        activeKeys.Add(c.Key);
+                    }
+                    foreach (var parent in chest.Parent)
+                    {
+                        if (parent.ChildsDict.Count > 0
+                            && parent.ChildsDict.First().Value.Count > 0
+                            && parent.ChildsDict.First().Value[0].Parent.Count < 2)
+                        {
+                            Key newKey;
+                            do
+                            {
+                                newKey = Keys[Random.Range(1, Keys.Count)];
+                            } while (newKey == Key.NO_CONDITION && newKey == parent.ContainedKey
+                                && activeKeys.Contains(newKey));
+                            parent.SetContainingKey(newKey);
+                        }
+                    }
+                }
             }
             else
             {
