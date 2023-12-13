@@ -1,49 +1,64 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class Chest : MonoBehaviour
 {
-    [Header("Chest")]
+    private static readonly int Open = Animator.StringToHash("Open");
 
-    [Header("References")]
-    [SerializeField] private Animator animator;
+    [Header("Chest")] [Header("References")] [SerializeField]
+    private Animator animator;
+
     [SerializeField] private Renderer _topRenderer;
     [SerializeField] private Renderer _bottomRenderer;
-    [Space(10f)]
-    [SerializeField] private TextMeshProUGUI titleText;
+
+    [Space(10f)] [SerializeField] private TextMeshProUGUI titleText;
+
     [SerializeField] private TextMeshPro letterText;
     [SerializeField] private TextMeshProUGUI conditionText;
     [SerializeField] private TextMeshProUGUI containsText;
-    private static readonly int Open = Animator.StringToHash("Open");
 
-    [Header("Prefabs")]
-    [SerializeField] private GameObject _arrowPrefab;
+    [Header("Prefabs")] [SerializeField] private GameObject _arrowPrefab;
 
-    [Header("Materials")]
-    [SerializeField] private Material _lockedMat;
+    [Header("Materials")] [SerializeField] private Material _lockedMat;
+
     [SerializeField] private Material _unlockedMat;
 
     public ChestGenerator.ChestID ChestID { get; private set; }
     public ChestGenerator.Key Key { get; private set; }
     public List<Chest> Parent { get; private set; } = new();
     public bool HasChilds { get; set; }
-    
-    public Dictionary<int, List<Chest>> ChildsDict { get; set; } = new();
+
+    public Dictionary<int, List<Chest>> ChildsDict { get; } = new();
 
     public bool HasCondition => Key != ChestGenerator.Key.NO_CONDITION;
     public bool IsFinalChest => ContainedKey == ChestGenerator.Key.NO_CONDITION;
 
     public ChestGenerator.Key ContainedKey { get; private set; } = ChestGenerator.Key.NO_CONDITION;
 
-    #region Animation 
+    #region Animation
 
-    public void OpenAnim()
+    private void OpenAnim()
     {
         animator.SetTrigger(Open);
     }
 
     #endregion
+
+    public void SetTitleAndKey(ChestGenerator.ChestID chestID, ChestGenerator.Key key)
+    {
+        ChestID = chestID;
+        Key = key;
+
+        BillboardSetTitleAndKey(chestID, key);
+    }
+
+    public void SetContainingKey(ChestGenerator.Key key)
+    {
+        ContainedKey = key;
+        BillboardSetContainingKeys();
+    }
 
     #region Billboard
 
@@ -52,14 +67,16 @@ public class Chest : MonoBehaviour
         titleText.text = "Chest " + chestID;
         letterText.text = chestID.ToString();
         conditionText.text =
-            key == ChestGenerator.Key.NO_CONDITION ?
-            "Open"
-            : "Key : " + key;
+            key == ChestGenerator.Key.NO_CONDITION
+                ? "Open"
+                : "Key : " + key;
     }
+
     private void BillboardSetContainingKeys()
     {
         containsText.text = IsFinalChest ? "Final chest" : "Contains " + ContainedKey;
     }
+
     private void BillboardResetContainingKeys()
     {
         containsText.text = "";
@@ -69,17 +86,15 @@ public class Chest : MonoBehaviour
 
     #region Open
 
-    private bool isOpenable = false;
+    private bool _isOpenable;
+
     public bool IsOpenable
     {
-        get => isOpenable;
+        get => _isOpenable;
         set
         {
-            isOpenable = value;
-            if (value == false)
-            {
-                BillboardResetContainingKeys();
-            }
+            _isOpenable = value;
+            if (value == false) BillboardResetContainingKeys();
 
             _topRenderer.sharedMaterial = value ? _unlockedMat : _lockedMat;
             _bottomRenderer.sharedMaterial = value ? _unlockedMat : _lockedMat;
@@ -104,76 +119,44 @@ public class Chest : MonoBehaviour
 
     #endregion
 
-    public void SetTitleAndKey(ChestGenerator.ChestID chestID, ChestGenerator.Key key)
-    {
-        ChestID = chestID;
-        Key = key;
-
-        BillboardSetTitleAndKey(chestID, key);
-    }
-
-    public void SetContainingKey(ChestGenerator.Key key)
-    {
-        ContainedKey = key;
-        BillboardSetContainingKeys();
-    }
-
     #region Arrow
 
-    private Dictionary<ChestGenerator.ChestID, Arrow> arrows = new();
+    private readonly Dictionary<ChestGenerator.ChestID, Arrow> _arrows = new();
 
     public void CreateArrows()
     {
         if (ChildsDict.Count == 0) return;
 
-        arrows.Clear();
+        _arrows.Clear();
 
         foreach (var rank in ChildsDict)
-        {
-            foreach (var child in rank.Value)
-            {
-                if (child != null)
-                {
-                    CreateArrow(child, rank.Key);
-                }
-            }
-        }
+        foreach (var child in rank.Value.Where(child => child != null))
+            CreateArrow(child, rank.Key);
     }
+
     private void CreateArrow(Chest chest, int rank)
     {
-        Arrow arrow = Instantiate(_arrowPrefab).GetComponent<Arrow>();
+        var arrow = Instantiate(_arrowPrefab).GetComponent<Arrow>();
 
-        arrows.Add(chest.ChestID, arrow);
+        _arrows.Add(chest.ChestID, arrow);
         arrow.Init(transform, chest.transform, rank);
     }
 
     public void SetArrowsActive(bool active)
     {
-        foreach (var pair in arrows)
-        {
-            if (pair.Value != null)
-            {
-                pair.Value.SetActive(active);
-            }
-        }
+        foreach (var pair in _arrows.Where(pair => pair.Value != null))
+            pair.Value.SetActive(active);
     }
+
     public void SetArrowsActive(bool active, ChestGenerator.ChestID chestID, int rank)
     {
-        if (arrows.ContainsKey(chestID))
-        {
-            arrows[chestID].SetActive(active, rank);
-        }
+        if (_arrows.TryGetValue(chestID, out var arrow)) arrow.SetActive(active, rank);
     }
 
     public void DisplayChild()
     {
-        foreach (var pair in ChildsDict)
-        {
-            foreach (var child in pair.Value)
-            {
-                Debug.Log(ChestID + " has child " + child.ChestID);
-            }
-        }
+        foreach (var child in ChildsDict.SelectMany(pair => pair.Value))
+            Debug.Log(ChestID + " has child " + child.ChestID);
     }
 
     #endregion
