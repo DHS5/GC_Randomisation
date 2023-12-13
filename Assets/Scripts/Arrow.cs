@@ -32,6 +32,8 @@ public class Arrow : MonoBehaviour
         _lineRenderer.endColor = _colorGradient.Evaluate((float)rank / 8);
 
         arrows.Add(this);
+
+        SetActive(false);
     }
 
     public void SetActive(bool active)

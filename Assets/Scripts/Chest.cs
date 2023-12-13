@@ -123,6 +123,17 @@ public class Chest : MonoBehaviour
         arrow.Init(transform, chest.transform, rank);
     }
 
+    public void SetArrowsActive(bool active)
+    {
+        foreach (var arrow in arrows)
+        {
+            if (arrow != null)
+            {
+                arrow.SetActive(active);
+            }
+        }
+    }
+
     public void DisplayChild()
     {
         foreach (var pair in ChildsDict)

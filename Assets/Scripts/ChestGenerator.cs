@@ -31,6 +31,7 @@ public class ChestGenerator : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private List<Transform> _chestAnchors;
+    [SerializeField] private TMP_Dropdown _pathsDropdown;
     [SerializeField] private TextMeshProUGUI _pathsText;
     [SerializeField] private RectTransform _pathsLayout;
 
@@ -262,48 +263,51 @@ public class ChestGenerator : MonoBehaviour
         ConstructChestGraph();
     }
 
+
+    private List<Path> Paths { get; set; }
     public void DisplayPaths()
     {
-        StringBuilder sb = new();
+        Paths = PossiblePaths();
+        Paths.Sort((p1, p2) => p1.Length.CompareTo(p2.Length));
 
-        List<List<Chest>> paths = PossiblePaths();
-        List<Chest> path;
-        for (int i = 0; i < paths.Count; i++)
+        _pathsDropdown.ClearOptions();
+
+        List<string> options = new();
+        for (int i = 0; i < Paths.Count; i++)
         {
-            path = paths[i];
-            path.Reverse();
-            foreach (var chest in path)
-            {
-                sb.Append(chest.ChestID.ToString());
-                sb.Append(" ");
-            }
-            sb.Append("\n");
+            options.Add(Paths[i].Display);
         }
-        Debug.Log(sb.ToString());
-        _pathsText.text = sb.ToString();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(_pathsLayout);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(_pathsLayout);
+        _pathsDropdown.AddOptions(options);
     }
-
-    private List<List<Chest>> PossiblePaths()
+    public void DisplayPathsArrow(int pathIndex)
     {
-        List<List<Chest>> paths = new();
-        List<Chest> path = new();
+        Paths[pathIndex].SetActive(true);
+    }
+    private List<Path> PossiblePaths()
+    {
+        List<Path> paths = new();
+        Path path = new();
         Chest start = Chests[^1];
         Chest end = Chests[0];
         bool[] visited = new bool[ChestCount];
         DFS(start, end, visited, path, paths);
+
+        foreach (var p in paths)
+        {
+            p.Complete();
+        }
+
         return paths;
     }
     
-    private void DFS(Chest current, Chest end, bool[] visited, List<Chest> path, List<List<Chest>> paths)
+    private void DFS(Chest current, Chest end, bool[] visited, Path path, List<Path> paths)
     {
         visited[(int)current.ChestID] = true;
         path.Add(current);
 
         if (current == end)
         {
-            paths.Add(new List<Chest>(path));
+            paths.Add(new(path));
         }
         else
         {
