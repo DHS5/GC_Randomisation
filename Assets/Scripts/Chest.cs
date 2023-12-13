@@ -62,6 +62,8 @@ public class Chest : MonoBehaviour
 
     #region Open
 
+    public bool IsOpenable { get; set; } = false;
+
     private void OnMouseDown()
     {
         if (ChestGenerator.Instance.IsBinActive)
@@ -69,8 +71,9 @@ public class Chest : MonoBehaviour
             if (ChestGenerator.Instance.ShortChest(this))
                 Destroy(gameObject);
         }
-        else
+        else if (IsOpenable)
         {
+            ChestGenerator.Instance.CurrentPath.OpenChest(this);
             OpenAnim();
             containsText.gameObject.SetActive(true);
             BillboardSetContainingKeys();

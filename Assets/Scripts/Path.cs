@@ -33,11 +33,24 @@ public class Path
 
     public void SetActive(bool active)
     {
+        chests[0].IsOpenable = active;
         for (int i = 0; i < chests.Count - 1; i++)
         {
             if (chests[i] != null)
             {
                 chests[i].SetArrowsActive(active, chests[i + 1].ChestID);
+            }
+        }
+    }
+
+    public void OpenChest(Chest chest)
+    {
+        if (chests.Contains(chest))
+        {
+            int index = chests.IndexOf(chest);
+            if (index < chests.Count - 1)
+            {
+                chests[index + 1].IsOpenable = true;
             }
         }
     }

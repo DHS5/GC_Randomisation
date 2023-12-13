@@ -265,6 +265,7 @@ public class ChestGenerator : MonoBehaviour
 
 
     private List<Path> Paths { get; set; }
+    public Path CurrentPath => Paths[PathIndex];
     public int PathIndex { get; private set; }
     public void DisplayPaths()
     {
@@ -293,6 +294,7 @@ public class ChestGenerator : MonoBehaviour
         foreach (var chest in Chests)
         {
             chest.SetArrowsActive(all);
+            chest.IsOpenable = all;
         }
 
         if (all) return;
