@@ -188,9 +188,26 @@ public class ChestGenerator : MonoBehaviour
                     chest.Key == child.ContainedKey ? Chests[0].ContainedKey : chest.Key);
             foreach (var c in Chests)
             {
-                if (c != Chests[0] && c != chest && c.ContainedKey == chest.ContainedKey && c.Key != chest.Key)
+                if (c != Chests[0] && c != chest && c.ContainedKey == chest.ContainedKey)
                 {
-                    c.SetContainingKey(chest.Key);
+                    if (c.Key != chest.Key)
+                        c.SetContainingKey(chest.Key);
+                    else
+                    {
+                        List<Key> activeKeys = new();
+                        foreach (var c2 in Chests)
+                        {
+                            activeKeys.Add(c2.Key);
+                        }
+
+                        Key newKey;
+                        do
+                        {
+                            newKey = Keys[Random.Range(1, Keys.Count)];
+                        } while (newKey == Key.NO_CONDITION && newKey == c.Key
+                            && activeKeys.Contains(newKey));
+                        c.SetContainingKey(newKey);
+                    }
                 }
             }
         }
