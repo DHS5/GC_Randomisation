@@ -53,7 +53,7 @@ public class Chest : MonoBehaviour
             if (Parent == null || Parent.Count == 0) return false;
             foreach (var parent in Parent)
             {
-                if (parent.HasChild(this)) return true;
+                if (parent.HasParent(this)) return true;
             }
             return false;
         }
@@ -62,6 +62,11 @@ public class Chest : MonoBehaviour
     {
         if (ChildsDict.First().Value.Count == 0) return false;
         return ChildsDict.First().Value.Contains(chest);
+    }
+    public bool HasParent(Chest chest)
+    {
+        if (chest.Parent == null || chest.Parent.Count == 0) return false;
+        return chest.Parent.Contains(chest);
     }
 
     public ChestGenerator.Key ContainedKey { get; private set; } = ChestGenerator.Key.NO_CONDITION;
