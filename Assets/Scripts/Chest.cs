@@ -66,8 +66,8 @@ public class Chest : MonoBehaviour
     {
         if (ChestGenerator.Instance.IsBinActive)
         {
-            ChestGenerator.Instance.ShortChest(this);
-            Destroy(gameObject);
+            if (ChestGenerator.Instance.ShortChest(this))
+                Destroy(gameObject);
         }
         else
         {

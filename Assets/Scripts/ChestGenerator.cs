@@ -170,9 +170,9 @@ public class ChestGenerator : MonoBehaviour
         return chest;
     }
     
-    public void ShortChest(Chest chest)
+    public bool ShortChest(Chest chest)
     {
-        if (chest.IsFinalChest || chest == Chests[0]) return;
+        if (chest.IsFinalChest || chest == Chests[0]) return false;
 
         foreach (var rank in chest.ChildsDict)
         {
@@ -194,6 +194,8 @@ public class ChestGenerator : MonoBehaviour
         Arrow.CleanArrows();
         ConstructChestGraph();
         DisplayPaths();
+
+        return true;
     }
 
 
