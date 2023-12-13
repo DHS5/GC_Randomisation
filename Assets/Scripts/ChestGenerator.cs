@@ -323,7 +323,7 @@ public class ChestGenerator : MonoBehaviour
 
         Chest chest = Chests[0];
         chests.Remove(chest);
-        chests.Remove(Chests[^1]);
+        //chests.Remove(Chests[^1]);
 
         List<Chest> childList = new();
         List<Chest> formerChildList;
