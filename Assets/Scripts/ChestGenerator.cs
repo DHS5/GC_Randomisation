@@ -278,13 +278,21 @@ public class ChestGenerator : MonoBehaviour
         {
             options.Add(Paths[i].Display);
         }
+        options.Add("All");
         _pathsDropdown.AddOptions(options);
 
         DisplayPathsArrow(0);
     }
     public void DisplayPathsArrow(int pathIndex)
     {
-        Paths[PathIndex].SetActive(false);
+        bool all = pathIndex == Paths.Count;
+
+        foreach (var chest in Chests)
+        {
+            chest.SetArrowsActive(all);
+        }
+
+        if (all) return;
 
         PathIndex = pathIndex;
         Paths[PathIndex].SetActive(true);
