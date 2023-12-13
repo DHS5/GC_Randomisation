@@ -11,6 +11,8 @@ public class Chest : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Animator animator;
+    [SerializeField] private Renderer _topRenderer;
+    [SerializeField] private Renderer _bottomRenderer;
     [Space(10f)]
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshPro letterText;
@@ -20,6 +22,10 @@ public class Chest : MonoBehaviour
 
     [Header("Prefabs")]
     [SerializeField] private GameObject _arrowPrefab;
+
+    [Header("Materials")]
+    [SerializeField] private Material _lockedMat;
+    [SerializeField] private Material _unlockedMat;
 
     public ChestGenerator.ChestID ChestID { get; private set; }
     public ChestGenerator.Key Key { get; private set; }
@@ -57,12 +63,31 @@ public class Chest : MonoBehaviour
     {
         containsText.text = IsFinalChest ? "Final chest" : "Contains " + ContainedKey;
     }
+    private void BillboardResetContainingKeys()
+    {
+        containsText.text = "";
+    }
 
     #endregion
 
     #region Open
 
-    public bool IsOpenable { get; set; } = false;
+    private bool isOpenable = false;
+    public bool IsOpenable
+    {
+        get => isOpenable;
+        set
+        {
+            isOpenable = value;
+            if (value == false)
+            {
+                BillboardResetContainingKeys();
+            }
+
+            _topRenderer.sharedMaterial = value ? _unlockedMat : _lockedMat;
+            _bottomRenderer.sharedMaterial = value ? _unlockedMat : _lockedMat;
+        }
+    }
 
     private void OnMouseDown()
     {

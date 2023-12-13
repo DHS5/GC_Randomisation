@@ -138,12 +138,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 8168647041203985697}
+  _topRenderer: {fileID: 4281145026450021150}
+  _bottomRenderer: {fileID: 7251608683497429982}
   titleText: {fileID: 8077358199654120534}
   letterText: {fileID: 2972538022507639336}
   conditionText: {fileID: 7786391680539189823}
   containsText: {fileID: 430446475315458285}
   _arrowPrefab: {fileID: 6844062291489874283, guid: 841163f271a4be943a2eec15ff5ca65d,
     type: 3}
+  _lockedMat: {fileID: 2100000, guid: 0b3ade8e48bd45b44b9e057c1c9de2bc, type: 2}
+  _unlockedMat: {fileID: 2100000, guid: 6abe85ef3c6b3904f9f91d5df8e11fe3, type: 2}
 --- !u!95 &8168647041203985697
 Animator:
   serializedVersion: 5
@@ -763,8 +767,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -973,7 +977,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 0.8773585, g: 0.59552246, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
