@@ -152,9 +152,22 @@ public class ChestGenerator : MonoBehaviour
         if (chest.IsFinalChest || chest == Chests[0]) return false;
 
         if (chest.ContainedKey != Chests[0].ContainedKey)
-            foreach (var child in chest.ChildsDict.SelectMany(rank => rank.Value))
-                child.SetTitleAndKey(child.ChestID,
-                    chest.Key == child.ContainedKey ? Chests[0].ContainedKey : chest.Key);
+        {
+            Debug.Log(chest.ChildsDict.First());
+            Debug.Log(chest.ChildsDict.First().Value[0]);
+            Debug.Log(chest.ChildsDict.First().Value[0].Parent);
+            if (chest.ChildsDict.First().Value[0].Parent.Count > 1)
+            {
+
+            }
+            else
+            {
+                foreach (var child in chest.ChildsDict.SelectMany(rank => rank.Value))
+                    child.SetTitleAndKey(child.ChestID,
+                        chest.Key == child.ContainedKey ? Chests[0].ContainedKey : chest.Key);
+            }
+        }
+
 
         Chests.Remove(chest);
 
