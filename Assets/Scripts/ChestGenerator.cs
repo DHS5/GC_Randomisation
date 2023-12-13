@@ -168,8 +168,7 @@ public class ChestGenerator : MonoBehaviour
                     foreach (var parent in chest.Parent)
                     {
                         if (parent.ChildsDict.Count > 0
-                            && parent.ChildsDict.First().Value.Count > 0
-                            && parent.ChildsDict.First().Value[0].Parent.Count < 2)
+                            && parent.ChildsDict.First().Value.Count > 1)
                         {
                             Key newKey;
                             do
