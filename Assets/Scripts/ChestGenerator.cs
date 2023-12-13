@@ -32,8 +32,8 @@ public class ChestGenerator : MonoBehaviour
     [Header("References")]
     [SerializeField] private List<Transform> _chestAnchors;
     [SerializeField] private TMP_Dropdown _pathsDropdown;
-    [SerializeField] private TextMeshProUGUI _pathsText;
-    [SerializeField] private RectTransform _pathsLayout;
+    [SerializeField] private TextMeshProUGUI _maxLengthText;
+    [SerializeField] private TextMeshProUGUI _minLengthText;
 
     [Header("Prefabs")]
     [SerializeField] private GameObject _chestPrefab;
@@ -282,6 +282,9 @@ public class ChestGenerator : MonoBehaviour
         _pathsDropdown.AddOptions(options);
 
         DisplayPathsArrow(0);
+
+        _minLengthText.text = "Min : " + (Paths[0].Length - 1);
+        _maxLengthText.text = "Max : " + (Paths[^1].Length - 1);
     }
     public void DisplayPathsArrow(int pathIndex)
     {
