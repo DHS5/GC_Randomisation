@@ -54,6 +54,20 @@ public class ChestGenerator : MonoBehaviour
     }
     public int Seed { get; private set; }
 
+    public string StrMaxRep
+    {
+        set
+        {
+            if (int.TryParse(value, out int maxRep))
+            {
+                MaxRep = Mathf.Max(1, maxRep);
+            }
+        }
+    }
+    public int MaxRep { get; private set; } = 2;
+
+
+
     public enum ChestID
     {
         A = 0,
@@ -136,6 +150,8 @@ public class ChestGenerator : MonoBehaviour
         };
         var finalList = new List<Key>() { Key.NO_CONDITION };
 
+        Dictionary<Key, int> keyDico = new();
+
         int randomPick;
         Key key;
         for (int i = 1; i < ChestCount; i++)
@@ -143,10 +159,20 @@ public class ChestGenerator : MonoBehaviour
             randomPick = Random.Range(0, pickList.Count);
             key = pickList[randomPick];
 
-            if (finalList.Contains(key))
+            if (keyDico.ContainsKey(key))
+            {
+                keyDico[key]++;
+            }
+            else
+            {
+                keyDico[key] = 1;
+            }
+
+            if (keyDico[key] == MaxRep)
             {
                 pickList.RemoveAt(randomPick);
             }
+
             finalList.Add(key);
         }
 
