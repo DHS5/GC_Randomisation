@@ -106,7 +106,6 @@ public class Chest : MonoBehaviour
 
     public void SetTitleAndKey(ChestGenerator.ChestID chestID, ChestGenerator.Key key)
     {
-        Debug.Log(ChestID + " " + chestID + " " + Key + " to " + key);
         ChestID = chestID;
         Key = key;
 

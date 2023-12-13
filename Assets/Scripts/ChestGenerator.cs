@@ -170,17 +170,20 @@ public class ChestGenerator : MonoBehaviour
     {
         if (chest.IsFinalChest || chest == Chests[0]) return false;
 
-        foreach (var rank in chest.ChildsDict)
+        if (chest.ContainedKey != Chests[0].ContainedKey)
         {
-            foreach (var child in rank.Value)
+            foreach (var rank in chest.ChildsDict)
             {
-                if (chest.Key == child.ContainedKey)
+                foreach (var child in rank.Value)
                 {
-                    child.SetTitleAndKey(child.ChestID, Chests[0].ContainedKey);
-                }
-                else
-                {
-                    child.SetTitleAndKey(child.ChestID, chest.Key);
+                    if (chest.Key == child.ContainedKey)
+                    {
+                        child.SetTitleAndKey(child.ChestID, Chests[0].ContainedKey);
+                    }
+                    else
+                    {
+                        child.SetTitleAndKey(child.ChestID, chest.Key);
+                    }
                 }
             }
         }
@@ -277,10 +280,13 @@ public class ChestGenerator : MonoBehaviour
         options.Add("All");
         _pathsDropdown.AddOptions(options);
 
-        DisplayPathsArrow(0);
+        if (Paths.Count > 0)
+        {
+            DisplayPathsArrow(0);
 
-        _minLengthText.text = "Min : " + (Paths[0].Length - 1);
-        _maxLengthText.text = "Max : " + (Paths[^1].Length - 1);
+            _minLengthText.text = "Min : " + (Paths[0].Length - 1);
+            _maxLengthText.text = "Max : " + (Paths[^1].Length - 1);
+        }
     }
     public void DisplayPathsArrow(int pathIndex)
     {
