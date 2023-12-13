@@ -107,6 +107,7 @@ public class ChestGenerator : MonoBehaviour
         FillChests();
 
         CleanFillChest(keys);
+        ConstructChestGraph();
         DisplayPaths();
     }
     private void SetSeed(int seed)
@@ -208,10 +209,6 @@ public class ChestGenerator : MonoBehaviour
         // Get Random Final Chest
         Chest finalChest;
         finalChest = chests[chests.Count - 1];
-        //do
-        //{
-        //    finalChest = chests[Random.Range(0, chests.Count)];
-        //} while (finalChest.HasCondition);
         chests.Remove(finalChest);
 
         Chest chest = chests[Random.Range(0, chests.Count)];
@@ -257,8 +254,6 @@ public class ChestGenerator : MonoBehaviour
             } while (newKey == chest.Key || newKey == Key.NO_CONDITION);
             chest.SetContainingKey(newKey);
         }
-
-        ConstructChestGraph();
     }
 
 
