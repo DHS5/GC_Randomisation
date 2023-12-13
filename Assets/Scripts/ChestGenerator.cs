@@ -265,6 +265,7 @@ public class ChestGenerator : MonoBehaviour
 
 
     private List<Path> Paths { get; set; }
+    public int PathIndex { get; private set; }
     public void DisplayPaths()
     {
         Paths = PossiblePaths();
@@ -278,10 +279,15 @@ public class ChestGenerator : MonoBehaviour
             options.Add(Paths[i].Display);
         }
         _pathsDropdown.AddOptions(options);
+
+        DisplayPathsArrow(0);
     }
     public void DisplayPathsArrow(int pathIndex)
     {
-        Paths[pathIndex].SetActive(true);
+        Paths[PathIndex].SetActive(false);
+
+        PathIndex = pathIndex;
+        Paths[PathIndex].SetActive(true);
     }
     private List<Path> PossiblePaths()
     {
