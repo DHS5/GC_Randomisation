@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Chest : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class Chest : MonoBehaviour
     [SerializeField] private TextMeshPro letterText;
     [SerializeField] private TextMeshProUGUI conditionText;
     [SerializeField] private TextMeshProUGUI containsText;
+    [SerializeField] private Image _foregroundImage;
 
     [Header("Prefabs")] [SerializeField] private GameObject _arrowPrefab;
 
@@ -82,6 +84,16 @@ public class Chest : MonoBehaviour
         containsText.text = "";
     }
 
+    public void SetFocus()
+    {
+        _foregroundImage.gameObject.SetActive(true);
+        Invoke(nameof(UnsetFocus), 3f);
+    }
+    private void UnsetFocus()
+    {
+        _foregroundImage.gameObject.SetActive(false);
+    }
+
     #endregion
 
     #region Open
@@ -114,6 +126,17 @@ public class Chest : MonoBehaviour
             OpenAnim();
             containsText.gameObject.SetActive(true);
             BillboardSetContainingKeys();
+
+            foreach (var pair in ChildsDict)
+            {
+                foreach (var child in pair.Value)
+                {
+                    if (child != null)
+                    {
+                        child.SetFocus();
+                    }
+                }
+            }
         }
     }
 
