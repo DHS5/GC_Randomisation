@@ -28,10 +28,15 @@ public class Arrow : MonoBehaviour
         _lineRenderer.SetPosition(1, originPos + ((offset + dist * 0.89f) * dir));
         _lineRenderer.SetPosition(2, originPos + ((offset + dist * 0.9f) * dir));
         _lineRenderer.SetPosition(3, originPos + ((offset + dist) * dir));
-        _lineRenderer.startColor = _colorGradient.Evaluate((float)rank / 9);
-        _lineRenderer.endColor = _colorGradient.Evaluate((float)rank / 9);
+        _lineRenderer.startColor = _colorGradient.Evaluate((float)rank / 8);
+        _lineRenderer.endColor = _colorGradient.Evaluate((float)rank / 8);
 
         arrows.Add(this);
+    }
+
+    public void SetActive(bool active)
+    {
+        _lineRenderer.enabled = active;
     }
 
 

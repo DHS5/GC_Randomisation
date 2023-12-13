@@ -96,9 +96,13 @@ public class Chest : MonoBehaviour
 
     #region Arrow
 
+    private List<Arrow> arrows = new();
+
     public void CreateArrows()
     {
         if (ChildsDict.Count == 0) return;
+
+        arrows.Clear();
 
         foreach (var rank in ChildsDict)
         {
@@ -115,6 +119,7 @@ public class Chest : MonoBehaviour
     {
         Arrow arrow = Instantiate(_arrowPrefab).GetComponent<Arrow>();
 
+        arrows.Add(arrow);
         arrow.Init(transform, chest.transform, rank);
     }
 
