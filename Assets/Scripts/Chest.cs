@@ -96,7 +96,7 @@ public class Chest : MonoBehaviour
 
     #region Arrow
 
-    private List<Arrow> arrows = new();
+    private Dictionary<ChestGenerator.ChestID, Arrow> arrows = new();
 
     public void CreateArrows()
     {
@@ -119,18 +119,25 @@ public class Chest : MonoBehaviour
     {
         Arrow arrow = Instantiate(_arrowPrefab).GetComponent<Arrow>();
 
-        arrows.Add(arrow);
+        arrows.Add(chest.ChestID, arrow);
         arrow.Init(transform, chest.transform, rank);
     }
 
     public void SetArrowsActive(bool active)
     {
-        foreach (var arrow in arrows)
+        foreach (var pair in arrows)
         {
-            if (arrow != null)
+            if (pair.Value != null)
             {
-                arrow.SetActive(active);
+                pair.Value.SetActive(active);
             }
+        }
+    }
+    public void SetArrowsActive(bool active, ChestGenerator.ChestID chestID)
+    {
+        if (arrows.ContainsKey(chestID))
+        {
+            arrows[chestID].SetActive(active);
         }
     }
 

@@ -33,11 +33,11 @@ public class Path
 
     public void SetActive(bool active)
     {
-        foreach (Chest chest in chests)
+        for (int i = 0; i < chests.Count - 1; i++)
         {
-            if (chest != null)
+            if (chests[i] != null)
             {
-                chest.SetArrowsActive(active);
+                chests[i].SetArrowsActive(active, chests[i + 1].ChestID);
             }
         }
     }
