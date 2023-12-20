@@ -40,12 +40,15 @@ public class Chest : MonoBehaviour
     public ChestGenerator.Key Key { get; private set; }
     public List<Chest> Parent { get; private set; } = new();
     public bool HasChilds { get; set; }
-
-    public Dictionary<int, List<Chest>> ChildsDict { get; } = new();
+    public List<Chest> Childs { get; } = new();
+    public int Rank { get; set; }
+    //public Dictionary<int, List<Chest>> ChildsDict { get; } = new();
 
     public bool HasCondition => Key != ChestGenerator.Key.NO_CONDITION;
     public bool IsFinalChest => ContainedKey == ChestGenerator.Key.NO_CONDITION;
 
+    public bool HasMultipleChild => Childs != null && Childs.Count > 1;
+    public bool HasMultipleParent => Parent != null && Parent.Count > 1;
     public bool IsParentOfParent
     {
         get
@@ -60,13 +63,16 @@ public class Chest : MonoBehaviour
     }
     public bool HasChild(Chest chest)
     {
-        if (ChildsDict.First().Value.Count == 0) return false;
-        return ChildsDict.First().Value.Contains(chest);
+        return Childs.Contains(chest);
     }
     public bool HasParent(Chest chest)
     {
         if (Parent == null || Parent.Count == 0) return false;
         return Parent.Contains(chest);
+    }
+    public bool IsChildAndParent(Chest chest)
+    {
+        return Childs.Contains(chest) && chest.Childs.Contains(this);
     }
 
     public ChestGenerator.Key ContainedKey { get; private set; } = ChestGenerator.Key.NO_CONDITION;
@@ -92,6 +98,14 @@ public class Chest : MonoBehaviour
     {
         ContainedKey = key;
         BillboardSetContainingKeys();
+    }
+
+    public void Inverse()
+    {
+        ChestGenerator.Key temp = Key;
+
+        SetTitleAndKey(ChestID, ContainedKey);
+        SetContainingKey(temp);
     }
 
     #region Billboard
@@ -160,7 +174,7 @@ public class Chest : MonoBehaviour
             containsText.gameObject.SetActive(true);
             BillboardSetContainingKeys();
 
-            foreach (var child in ChildsDict.SelectMany(pair => pair.Value.Where(child => child != null)))
+            foreach (var child in Childs.Where(child => child != null))
                 child.SetFocus();
         }
     }
@@ -173,21 +187,20 @@ public class Chest : MonoBehaviour
 
     public void CreateArrows()
     {
-        if (ChildsDict.Count == 0) return;
+        if (Childs.Count == 0) return;
 
         _arrows.Clear();
 
-        foreach (var rank in ChildsDict)
-        foreach (var child in rank.Value.Where(child => child != null))
-            CreateArrow(child, rank.Key);
+        foreach (var child in Childs.Where(child => child != null))
+            CreateArrow(child);
     }
 
-    private void CreateArrow(Chest chest, int rank)
+    private void CreateArrow(Chest chest)
     {
         var arrow = Instantiate(arrowPrefab).GetComponent<Arrow>();
 
         _arrows.Add(chest.ChestID, arrow);
-        arrow.Init(transform, chest.transform, rank);
+        arrow.Init(transform, chest.transform, Rank);
     }
 
     public void SetArrowsActive(bool active)
