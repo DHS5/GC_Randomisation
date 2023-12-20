@@ -161,6 +161,26 @@ public class ChestGenerator : MonoBehaviour
         }
         return activeKeys.Contains(key);
     }
+    private void GetNewActiveKey(Chest chest)
+    {
+        if (!IsKeyActive(chest.ContainedKey, out List<Key> activeKeys) || chest.Key == chest.ContainedKey)
+        {
+            if (activeKeys.Count > 1)
+            {
+                Key newKey;
+                do
+                {
+                    newKey = activeKeys[Random.Range(0, activeKeys.Count)];
+                } while (newKey == chest.Key);
+                chest.SetContainingKey(newKey);
+            }
+            else
+            {
+                chest.SetContainingKey(activeKeys[0]);
+                Debug.LogError("Only one active key");
+            }
+        }
+    }
 
     public bool ShortChest(Chest chest)
     {
@@ -171,27 +191,31 @@ public class ChestGenerator : MonoBehaviour
         {
             Chests.Remove(chest);
 
-            if (!IsKeyActive(chest.Parent[0].ContainedKey, out List<Key> activeKeys))
-            {
-                if (activeKeys.Count > 1)
-                {
-                    Key newKey;
-                    do
-                    {
-                        newKey = activeKeys[Random.Range(0, activeKeys.Count)];
-                    } while (newKey == chest.Parent[0].Key);
-                    chest.Parent[0].SetContainingKey(newKey);
-                }
-                else
-                {
-                    chest.Parent[0].SetContainingKey(activeKeys[0]);
-                    Debug.LogError("Only one active key");
-                }
-            }
+            GetNewActiveKey(chest.Parent[0]);
+
+            //if (!IsKeyActive(chest.Parent[0].ContainedKey, out List<Key> activeKeys))
+            //{
+            //    if (activeKeys.Count > 1)
+            //    {
+            //        Key newKey;
+            //        do
+            //        {
+            //            newKey = activeKeys[Random.Range(0, activeKeys.Count)];
+            //        } while (newKey == chest.Parent[0].Key);
+            //        chest.Parent[0].SetContainingKey(newKey);
+            //    }
+            //    else
+            //    {
+            //        chest.Parent[0].SetContainingKey(activeKeys[0]);
+            //        Debug.LogError("Only one active key");
+            //    }
+            //}
         }
 
         else
         {
+            Chests.Remove(chest);
+
             List<Chest> inverseList = new();
 
             foreach (var child in chest.Childs.Where(c => c != null))
@@ -200,17 +224,21 @@ public class ChestGenerator : MonoBehaviour
                     child.SetTitleAndKey(child.ChestID, chest.Key);
                 else
                 {
-                    child.Inverse();
+                    //child.Inverse();
+                    child.SetTitleAndKey(child.ChestID, chest.Key);
                     inverseList.Add(child);
                 }
             }
-
-
-            Chests.Remove(chest);
+            
 
             foreach (var similarChest in Chests.Where(c => !inverseList.Contains(c) && c.ContainedKey == chest.ContainedKey))
             {
                 similarChest.SetContainingKey(chest.Key);
+            }
+
+            foreach (var inverse in inverseList)
+            {
+                GetNewActiveKey(inverse);
             }
         }
 
